@@ -11,7 +11,7 @@ export const UPDATE_PRODUCT = `${URL}/catalog/product/update`;
 
 //Category apis
 export const FETCH_CATEGORY = `${URL}/catalog/category`;
-export const FETCH_ALL_CATEGORY = `${URL}/catalog/categories`;
+export const FETCH_ALL_CATEGORIES = `${URL}/catalog/categories`;
 export const ADD_CATEGORY = `${URL}/catalog/category/add`;
 export const REMOVE_CATEGORY = `${URL}/catalog/category/remove`;
 export const UPDATE_CATEGORY = `${URL}/catalog/category/update`;

@@ -4,6 +4,8 @@ import ProductCard from "../Components/ProductCard";
 import { FETCH_ALL_PRODUCTS } from "../Constants/apis";
 import { createTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
+import AddCategory from "./AddCategory";
+import AddProduct from "./AddProduct";
 
 const theme = createTheme({
   palette: {
@@ -41,6 +43,8 @@ function Home() {
       {products?.map((product, i) => {
         return <ProductCard key={i} product={product} />;
       })}
+      <AddCategory />
+      <AddProduct />
     </ThemeProvider>
   );
 }
