@@ -9,12 +9,34 @@ function App() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#03A19F",
-        red: "#DB4437",
+        main: "#FF2A44",
+        // secondary: "#FFF",
+        // red: "#DB4437",
         shadow: "1px 5px 50px rgba(0, 0, 0, 0.06)",
       },
+      secondary: {
+        main: "#fff",
+      },
       background: {
-        default: `#f5fafe`,
+        default: `#FF2A44`,
+      },
+      text: {
+        primary: "#121111",
+        secondary: "#A7a8Ad",
+      },
+    },
+    overrides: {
+      MuiOutlinedInput: {
+        // Name of the rule
+        // notchedOutline: {
+        //   // Some CSS
+        //   borderColor: "#A7a8Ad",
+        // },
+      },
+      MuiButton: {
+        outlined: {
+          color: "#A7a8Ad",
+        },
       },
     },
   });

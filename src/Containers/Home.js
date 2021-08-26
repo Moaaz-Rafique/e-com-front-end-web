@@ -1,30 +1,12 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import ProductCard from "../Components/ProductCard";
+import { NavBar, MainPicture, ProductList } from "../Components";
 import { FETCH_ALL_PRODUCTS } from "../Constants/apis";
-import { createTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
-import AddCategory from "./AddCategory";
-import AddProduct from "./AddProduct";
+import { useTheme } from "@material-ui/core/styles";
+import { Container, Grid, Typography } from "@material-ui/core";
 
-const theme = createTheme({
-  palette: {
-    type: "light",
-    primary: {
-      main: "#35f51b",
-    },
-    secondary: {
-      main: "#0f0557",
-    },
-    // background: {
-    //   paper: "#dad9d9",
-    // },
-    // text: {
-    //   primary: "rgba(74,74,74,1)",
-    // },
-  },
-});
 function Home() {
+  const theme = useTheme();
   const [products, setProducts] = useState([]);
   useEffect(() => {
     getProductList();
@@ -38,14 +20,13 @@ function Home() {
       });
   };
   return (
-    <ThemeProvider theme={theme}>
-      MyProducts
-      {products?.map((product, i) => {
-        return <ProductCard key={i} product={product} />;
-      })}
-      <AddCategory />
-      <AddProduct />
-    </ThemeProvider>
+    <Container maxWidth={false} style={{ width: "90%" }}>
+      <Grid container>
+        <NavBar />
+        <MainPicture />
+        <ProductList />
+      </Grid>
+    </Container>
   );
 }
 export default Home;
