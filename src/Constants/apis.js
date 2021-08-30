@@ -4,7 +4,7 @@ const URL = BASE_URL + api;
 
 //Product apis
 export const FETCH_ALL_PRODUCTS = `${URL}/catalog/products`;
-export const FETCH_PRODUCT = `${URL}/catalog/product`;
+export const FETCH_PRODUCT = `${URL}/catalog/product?`;
 export const ADD_PRODUCT = `${URL}/catalog/product/add`;
 export const REMOVE_PRODUCT = `${URL}/catalog/product/remove`;
 export const UPDATE_PRODUCT = `${URL}/catalog/product/update`;

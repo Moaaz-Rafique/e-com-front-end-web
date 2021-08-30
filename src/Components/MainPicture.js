@@ -28,7 +28,7 @@ function MainPicture() {
     paper: {
       marginLeft: 20,
       marginRight: 50,
-      height: 400,
+      height: size[0] > 900 ? 400 : "auto",
       background: "pink",
       boxShadow: "none",
       borderRadius: 20,
@@ -47,6 +47,7 @@ function MainPicture() {
       borderRadius: 25,
       border: "none",
       borderBottom: "none",
+      marginRight: "100px !important",
     },
     input: {
       marginLeft: theme.spacing(1),
@@ -71,14 +72,15 @@ function MainPicture() {
       <Grid container className={classes.paper} alignItems="center">
         <Grid
           item
-          sm={size[0] > 1300 ? "4" : size[0] > 900 ? "6" : 11}
+          sm={size[0] > 1300 ? 4 : size[0] > 900 ? 6 : 11}
           xs={10}
           className={classes.gridItem}
+          style={{ marginRight: 30 }}
         >
-          <Typography variant="h4">
+          <Typography variant={size[0] > 900 ? "h4" : "h6"}>
             <Box fontWeight="fontWeightBold" p={size[0] > 800 ? 8 : 2}>
               Get The Best Products of The World <br />
-              <Paper fullWidth className={classes.filledInput}>
+              <Paper className={classes.filledInput}>
                 <IconButton
                   type="submit"
                   className={classes.iconButton}

@@ -94,8 +94,8 @@ function NavBar() {
           <Grid container justifyContent="space-around">
             {navButtons.map((e, i) => {
               return (
-                <Grid item>
-                  <Link key={i} to={e.route} className={classes.icon}>
+                <Grid key={i} item>
+                  <Link to={"#"} className={classes.icon}>
                     {e.icon}
                   </Link>
                 </Grid>
