@@ -4,6 +4,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import configStore from "./store";
 import { ThemeProvider } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
+import GoogleLogin from "react-google-login";
 function App() {
   const { store, persistor } = configStore();
   const theme = createTheme({
@@ -44,6 +45,7 @@ function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <ThemeProvider theme={theme}>
+          {/*  */}
           <AppRouter />
         </ThemeProvider>
       </PersistGate>
