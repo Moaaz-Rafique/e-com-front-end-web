@@ -8,3 +8,4 @@ export const SET_CART = "SET_CART";
 
 export const SET_CATEGORIES = "SET_CATEGORIES";
 export const ADD_CATEGORY = "ADD_CATEGORY";
+export const SET_SIMILAR_PRODUCTS = "SET_SIMILAR_PRODUCTS";

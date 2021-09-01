@@ -1,24 +1,20 @@
 import { Grid } from "@material-ui/core";
 import { Card, Paper } from "@material-ui/core";
+import axios from "axios";
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ProductCard } from ".";
 import { FETCH_ALL_PRODUCTS } from "../Constants/apis";
+import { SET_PRODUCT_LIST } from "../store/types";
 function ProductList() {
-  const [products, setProducts] = useState([]);
+  const products = useSelector((state) => state.productReducer.product_list);
+  const dispatch = useDispatch();
   useEffect(() => {
     getProductList();
   }, []);
   const getProductList = async () => {
-    await fetch(FETCH_ALL_PRODUCTS)
-      .then((response) => response.json())
-
-      .then((data) => {
-        setProducts(data.data);
-        console.log(data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    const data = await axios.get(FETCH_ALL_PRODUCTS);
+    dispatch({ type: SET_PRODUCT_LIST, payload: data.data.data }); // console.log(data.data);
   };
   return (
     <Grid item xs={12}>

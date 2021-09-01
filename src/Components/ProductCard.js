@@ -10,17 +10,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router";
 import { BASE_URL } from "../Constants/apis";
 
-
 function ProductCard(props) {
   const history = useHistory();
   const { product } = props;
-  const { w,h } = props;
+  const { w, h } = props;
   const useStyles = makeStyles((theme) => ({
-    card: { margin: 10, boxShadow: "none" },  
+    card: { margin: 10, boxShadow: "none" },
     image: {
       background: "#f0f0f0",
-      width: w||280,
-      height: h||320,
+      width: w || 280,
+      height: h || 320,
       padding: 20,
       objectFit: "contain",
       minWidth: 120,
@@ -39,10 +38,12 @@ function ProductCard(props) {
       }}
     >
       <CardActionArea>
-        <div className={classes.imageDiv}
-        onClick={() => {
-          history.push("/product/" + product._id);
-        }}>
+        <div
+          className={classes.imageDiv}
+          onClick={() => {
+            history.push("/product/" + product._id);
+          }}
+        >
           <img
             src={`${BASE_URL}/images/${product?._id}/${product?.image}`}
             className={classes.image}

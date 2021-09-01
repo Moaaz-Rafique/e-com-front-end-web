@@ -1,11 +1,21 @@
-import { Box, Button, Divider, Grid, ImageList, ImageListItem, makeStyles } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Divider,
+  Grid,
+  ImageList,
+  ImageListItem,
+  makeStyles,
+} from "@material-ui/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { BASE_URL, FETCH_PRODUCT } from "../Constants/apis";
 import qs from "qs";
 import { Typography } from "@material-ui/core";
-import {ProductCard} from "../Components";
+import { ProductCard } from "../Components";
+import { useSelector, useDispatch } from "react-redux";
+import { SET_PRODUCT_DETAILS, SET_SIMILAR_PRODUCTS } from "../store/types";
 function ProductPage() {
   const useStyles = makeStyles((theme) => ({
     image: {
@@ -16,20 +26,14 @@ function ProductPage() {
       objectFit: "contain",
     },
     root: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'nowrap',
-      width: 'fit-content',
-      // justifyContent: 'space-around',
+      // display: "flex",
+      // flexDirection: "row",
+      // // flexWrap: "nowrap",
+      // width: "fit-content",
+      // justifyContent: "space-around",
       // overflow: 'auto',
       backgroundColor: theme.palette.background.paper,
     },
-    imageList: {
-      // flexWrap: 'nowrap',
-      // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-      // transform: 'translateZ(0)',
-    },
-    
     text: {
       color: theme.palette.text.primary,
     },
@@ -55,21 +59,33 @@ function ProductPage() {
       padding: "20px 0px",
       overflow: "auto",
     },
-    similarGridItem:{margin: '0px'},
-    category:{
-      ...theme.palette.MuiButton
-    }
+    similarGridItem: { margin: "0px" },
+    category: {
+      padding: 10,
+    },
   }));
   const classes = useStyles();
 
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
-  const [similar, setSimilar] = useState([]);
+  const dispatch = useDispatch();
+  const allProducts = useSelector(
+    (state) => state.productReducer.product_details
+  );
+  const product = useSelector(
+    (state) => state?.productReducer?.product_details?.[id]
+  );
+  const similar = useSelector((state) => state?.productReducer?.similar);
+  const [loading, setLoading] = useState(true);
+  const [similarLoaded, setSimilarLoaded] = useState(false);
 
   useEffect(() => {
+    // console.log(allProducts);
+    if (!allProducts?.[id]) {
+      setLoading(true);
+    }
+    setSimilarLoaded(false);
     getProductFromId();
-    console.log(similar)
-  }, []);
+  }, [id]);
   const getProductFromId = async () => {
     let query = {
       id,
@@ -77,43 +93,31 @@ function ProductPage() {
     try {
       const data = await axios.get(FETCH_PRODUCT + qs.stringify(query));
 
-      console.log(data.data);
-      setProduct(data.data.data);
-      setSimilar(data.data.similar)
+      // console.log(data.data);
+      // setProduct(data.data.data);
+      dispatch({ type: SET_PRODUCT_DETAILS, payload: data.data.data });
+      dispatch({ type: SET_SIMILAR_PRODUCTS, payload: data.data.similar });
+      setLoading(false);
+      setSimilarLoaded(true);
     } catch (err) {
       console.log(err);
     }
   };
-  if(!product){
-    return 'loading product'
+  if (loading) {
+    return "loading product";
   }
   return (
     <Grid container direction="row" justifyContent="space-between">
-      <Grid item sm={6} xs={11}>        
+      <Grid item sm={6} xs={11}>
         <div className={classes.imageDiv}>
-          {product.image? 
+          {product.image ? (
             <img
               src={`${BASE_URL}/images/${product?._id}/${product?.image}`}
               className={classes.image}
             />
-            : 'loading image'
-          
-        }
-        </div>
-        <div>
-          <Typography variant="subtitle1">Similar Items: </Typography>
-          <div style={{overflow:'auto'}}>
-
-          <Grid container className={classes.root}>
-
-            {similar.map((e,i)=>{
-              return <Grid key={i} item xs={4} sm={5} className={classes.similarGridItem}>
-                  <ProductCard product={e} w={'100'} h={100}/>
-              </Grid>
-            })
-          }
-          </Grid>
-          </div>
+          ) : (
+            "loading image"
+          )}
         </div>
       </Grid>
       <Divider
@@ -122,7 +126,7 @@ function ProductPage() {
         flexItem
       />
       <Grid item sm={5} xs={11}>
-        <Typography variant="h2" className={classes.text}>
+        <Typography variant="h3" className={classes.text}>
           <Box>{product?.title}</Box>
         </Typography>
         <Typography
@@ -131,21 +135,22 @@ function ProductPage() {
         >
           {product?.description}
         </Typography>
-        <Typography variant="h4" className={classes.text} color="primary">
-        <Box>
-        Category
-        </Box>
-        <Box fontSize="16px">{product?.categories.map((e,i)=><span className={classes.category}key={i}>{e.title}</span>)}</Box>
+        <Typography variant="h5" className={classes.text} color="primary">
+          <Box>Category</Box>
+          <Box fontSize="16px">
+            {product?.categories.map((e, i) => (
+              <span className={classes.category} key={i}>
+                {e.title}
+              </span>
+            ))}
+          </Box>
         </Typography>
-        <Typography variant="h3" className={classes.text} color="primary">
-          <Box >Rs. {product?.price}</Box>
+        <Typography variant="h5" className={classes.text} color="primary">
+          <Box>Rs. {product?.price}</Box>
         </Typography>
         <div
           style={{
-            display: "flex",
             width: "100%",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
           }}
         >
           <Button variant="outlined" className={classes.button}>
@@ -158,6 +163,27 @@ function ProductPage() {
             Add to basket
           </Button>
         </div>
+      </Grid>
+      <Grid item sm={12} xs={11}>
+        <Typography variant="subtitle1">Similar Items: </Typography>
+
+        <Grid container className={classes.root}>
+          {similarLoaded
+            ? similar?.map((e, i) => {
+                return (
+                  <Grid
+                    key={i}
+                    item
+                    // xs={4}
+                    // sm={4}
+                    className={classes.similarGridItem}
+                  >
+                    <ProductCard product={e} w={100} h={100} />
+                  </Grid>
+                );
+              })
+            : "LOADING SIMILAR PRODUCTS"}
+        </Grid>
       </Grid>
     </Grid>
   );

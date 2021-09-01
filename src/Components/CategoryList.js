@@ -2,6 +2,9 @@ import { Box, Grid, makeStyles, Typography } from "@material-ui/core";
 import { useState, useEffect } from "react";
 import { FETCH_ALL_CATEGORIES } from "../Constants/apis";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
+import { useSelector, useDispatch } from "react-redux";
+import { SET_CATEGORIES } from "../store/types";
+import axios from "axios";
 
 function CategoryList() {
   const useStyles = makeStyles((theme) => ({
@@ -16,21 +19,18 @@ function CategoryList() {
   }));
   const classes = useStyles();
 
-  const [categories, setCategories] = useState([]);
+  const categories = useSelector((state) => state.categoryReducer.categories);
+  const dispatch = useDispatch();
   useEffect(() => {
     getCategoryList();
   }, []);
   const getCategoryList = async () => {
-    await fetch(FETCH_ALL_CATEGORIES)
-      .then((response) => response.json())
-
-      .then((data) => {
-        setCategories(data.data);
-        console.log(data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      const data = await axios.get(FETCH_ALL_CATEGORIES);
+      dispatch({ type: SET_CATEGORIES, payload: data.data.data });
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <Grid item xs={12}>
@@ -41,7 +41,7 @@ function CategoryList() {
         style={{ margin: 15, marginBottom: -5 }}
       >
         <Grid
-          Item
+          item
           xs={8}
           sm={9}
           style={{
@@ -50,7 +50,7 @@ function CategoryList() {
           }}
         >
           <Typography variant="body1">
-            <Box o>
+            <Box>
               {categories.map((category, i) => {
                 return (
                   <span key={i} style={{ padding: 25 }}>
@@ -61,7 +61,7 @@ function CategoryList() {
             </Box>
           </Typography>
         </Grid>
-        <Grid Item sm={2} xs={4} style={{ textAlign: "right" }}>
+        <Grid item sm={2} xs={4} style={{ textAlign: "right" }}>
           <KeyboardBackspaceIcon className={classes.arrow} />
           <KeyboardBackspaceIcon className={[classes.mirror, classes.arrow]} />
         </Grid>
