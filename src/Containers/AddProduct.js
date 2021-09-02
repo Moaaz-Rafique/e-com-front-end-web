@@ -72,7 +72,7 @@ function AddProduct() {
         .post(ADD_PRODUCT, myProduct)
         .then((response) => setData(response.data.data));
     } catch (err) {
-      console(err);
+      console.log(err);
     }
   };
   const getAllCategories = () => {
@@ -85,7 +85,7 @@ function AddProduct() {
     }
   };
   const addProductCategory = () => {
-    console.log(productCategories);
+    // console.log(productCategories);
     setProductCategories([...productCategories, selectedCategory]);
   };
   const classes = useStyles();
@@ -145,10 +145,7 @@ function AddProduct() {
                 variant="outlined"
                 className={classes.text}
                 value={selectedCategory}
-                onChange={(e) => {
-                  console.log(e.target.value);
-                  setSelectedCategory(e.target.value);
-                }}
+                onChange={(e) => setSelectedCategory(e.target.value)}
               >
                 {allCategories.map((e, i) => {
                   return (

@@ -4,8 +4,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import configStore from "./store";
 import { ThemeProvider } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
-import GoogleLogin from "react-google-login";
-import CookieConsent from "react-cookie-consent";
+
 function App() {
   const { store, persistor } = configStore();
   const theme = createTheme({
@@ -46,19 +45,6 @@ function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <ThemeProvider theme={theme}>
-          <CookieConsent
-            location="bottom"
-            buttonText="Sure man!!"
-            cookieName="myAwesomeCookieName2"
-            style={{ background: "#2B373B" }}
-            buttonStyle={{ color: "#4e503b", fontSize: "13px" }}
-            expires={150}
-          >
-            This website uses cookies to enhance the user experience.{" "}
-            <span style={{ fontSize: "10px" }}>
-              This bit of text is smaller :O
-            </span>
-          </CookieConsent>
           <AppRouter />
         </ThemeProvider>
       </PersistGate>

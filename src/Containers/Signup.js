@@ -17,9 +17,79 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import bcrypt from "bcryptjs";
+import axios from "axios";
+import { SIGNUP_USER } from "../Constants/apis";
 
 function Signup() {
-  const [] username, setUsername] = useState()
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [passwordMask, setPasswordMask] = useState(true);
+  const salt = bcrypt.genSaltSync(9);
+  const signupUser = async (user) => {
+    try {
+      const data = await axios.post(SIGNUP_USER, user);
+      console.log(data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const authAndLoginWithEmail = () => {
+    console.log(bcrypt);
+    if (!username || !email || !password || !passwordConfirmation) {
+      alert("You must enter all info correctly");
+      return;
+    } else if (password !== passwordConfirmation) {
+      console.log("Password and Password Confirmation should be same");
+      return;
+    }
+    const re =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (!re.test(email)) {
+      alert("Enter Valid Mail");
+    }
+    const passwordHash = bcrypt.hashSync(password, salt);
+    const newUser = {
+      username,
+      email,
+      loginType: "email",
+      passwordHash,
+    };
+    signupUser(newUser);
+    // console.log(newUser);
+  };
+  const sigupWithFacebook = (user) => {
+    const newUser = {
+      username: user.name,
+      id: user.id,
+      email: user.email,
+      loginType: "facebook",
+      imageUrl: user.picture.data.url,
+    };
+    signupUser(newUser);
+    console.log(newUser);
+  };
+  const sigupWithGoogle = (user) => {
+    const newUser = {
+      username: user.name,
+      id: user.id,
+      email: user.email,
+      loginType: "google",
+      imageUrl: user.picture.data.url,
+    };
+    //     email: "moaazrafiquetk@gmail.com"
+    // familyName: "Rafique"
+    // givenName: "Moaaz"
+    // googleId: "105013631765428341008"
+    // imageUrl: "https://lh3.googleusercontent.com/a/AATXAJxXx5QOVp2S9WxK4W0NPJFv-NL21ERbCPfb1NHS=s96-c"
+    // name: "Moaaz Rafique"
+
+    signupUser(newUser);
+    console.log(newUser);
+  };
   const useStyles = makeStyles((theme) => ({
     root: {
       boxShadow: "none",
@@ -96,6 +166,7 @@ function Signup() {
       fontWeight: 500,
     },
   }));
+
   const classes = useStyles();
 
   return (
@@ -125,24 +196,40 @@ function Signup() {
           </Typography>
           <Grid item xs={12} className={classes.text}>
             <InputLabel>Username</InputLabel>
-            <TextField variant="outlined" className={classes.inputMain} />
+            <TextField
+              variant="outlined"
+              className={classes.inputMain}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
             <InputLabel>Email</InputLabel>
-            <TextField variant="outlined" className={classes.inputMain} />
+            <TextField
+              type="email"
+              variant="outlined"
+              className={classes.inputMain}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
             {/* Password and confirm */}
             <Grid container>
               <Grid item md={6} sm={12} className={classes.inputSecondary}>
                 <InputLabel>Password</InputLabel>
                 <TextField
-                  type="password"
+                  type={passwordMask ? "password" : "text"}
                   variant="outlined"
                   className={classes.inputMain}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
                         <RemoveRedEye
                           // color="primary"
                           className={classes.eye}
-                          // onClick={this.togglePasswordMask}
+                          onClick={() => {
+                            console.log(passwordMask);
+                            setPasswordMask(!passwordMask);
+                          }}
                         />
                       </InputAdornment>
                     ),
@@ -152,15 +239,17 @@ function Signup() {
               <Grid item sm={12} md={6} className={classes.inputSecondary}>
                 <InputLabel>Confirm</InputLabel>
                 <TextField
-                  type="password"
+                  type={passwordMask ? "password" : "text"}
                   variant="outlined"
                   className={classes.inputMain}
+                  value={passwordConfirmation}
+                  onChange={(e) => setPasswordConfirmation(e.target.value)}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
                         <RemoveRedEye
                           className={classes.eye}
-                          // onClick={this.togglePasswordMask}
+                          onClick={() => alert(passwordMask)}
                         />
                       </InputAdornment>
                     ),
@@ -168,7 +257,11 @@ function Signup() {
                 />
               </Grid>
             </Grid>
-            <Button variant="outlined" className={classes.button}>
+            <Button
+              variant="outlined"
+              className={classes.button}
+              onClick={authAndLoginWithEmail}
+            >
               Create account
             </Button>
             <div style={{ display: "flex", margin: 20, alignItems: "center" }}>
@@ -185,20 +278,21 @@ function Signup() {
                 console.log("success", e);
               }}
               onFailure={(e) => {
+                if (e.error == "idpiframe_initialization_failed") {
+                  alert("Please Allow Cookies to login with google account");
+                }
                 console.log("failed", e);
               }}
               cookiePolicy={"single_host_origin"}
             />
             <FacebookLogin
               appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-              // ""
-              // className={classes.button}
               icon={<FacebookIcon style={{ padding: 10, color: "#3b5998" }} />}
               cssClass={classes.fb}
               autoLoad={true}
               fields="name,email,picture"
               onClick={(e) => console.log(e)}
-              callback={(user) => console.log(user)}
+              callback={sigupWithFacebook}
             />
           </Grid>
         </Grid>

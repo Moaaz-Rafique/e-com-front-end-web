@@ -26,5 +26,5 @@ export const UPDATE_CART = `${URL}/catalog/cart/update`;
 //User apis
 export const FETCH_ALL_USER = `${URL}/catalog/users`;
 export const FETCH_USER = `${URL}/catalog/user`;
-export const LOGIN_USER = `${URL}/login`;
-export const SIGNUP_USER = `${URL}/signup`;
+export const LOGIN_USER = `${URL}/catalog/login`;
+export const SIGNUP_USER = `${URL}/catalog/signup`;
