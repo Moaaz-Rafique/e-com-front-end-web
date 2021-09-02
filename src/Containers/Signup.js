@@ -27,7 +27,7 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [passwordMask, setPasswordMask] = useState(true);
-  const salt = bcrypt.genSaltSync(9);
+
   const signupUser = async (user) => {
     try {
       const data = await axios.post(SIGNUP_USER, user);
@@ -36,8 +36,9 @@ function Signup() {
       console.log(err);
     }
   };
+
   const authAndLoginWithEmail = () => {
-    console.log(bcrypt);
+    const salt = bcrypt.genSaltSync(10);
     if (!username || !email || !password || !passwordConfirmation) {
       alert("You must enter all info correctly");
       return;
@@ -50,6 +51,7 @@ function Signup() {
 
     if (!re.test(email)) {
       alert("Enter Valid Mail");
+      return;
     }
     const passwordHash = bcrypt.hashSync(password, salt);
     const newUser = {
@@ -61,6 +63,7 @@ function Signup() {
     signupUser(newUser);
     // console.log(newUser);
   };
+
   const sigupWithFacebook = (user) => {
     const newUser = {
       username: user.name,
@@ -72,21 +75,15 @@ function Signup() {
     signupUser(newUser);
     console.log(newUser);
   };
-  const sigupWithGoogle = (user) => {
+  const sigupWithGoogle = (e) => {
+    const user = e.profileObj;
     const newUser = {
       username: user.name,
-      id: user.id,
+      id: user.googleId,
       email: user.email,
       loginType: "google",
-      imageUrl: user.picture.data.url,
+      imageUrl: user.imageUrl,
     };
-    //     email: "moaazrafiquetk@gmail.com"
-    // familyName: "Rafique"
-    // givenName: "Moaaz"
-    // googleId: "105013631765428341008"
-    // imageUrl: "https://lh3.googleusercontent.com/a/AATXAJxXx5QOVp2S9WxK4W0NPJFv-NL21ERbCPfb1NHS=s96-c"
-    // name: "Moaaz Rafique"
-
     signupUser(newUser);
     console.log(newUser);
   };
@@ -172,13 +169,16 @@ function Signup() {
   return (
     <Paper className={classes.root}>
       <Grid container>
+        {/* Image */}
         <Grid item xs={6} className={classes.sideImageContainer}>
           <img
             className={classes.sideImage}
             src="https://thumbs.dreamstime.com/z/online-store-vertical-banner-copy-space-vertical-banner-copy-space-people-characters-shopping-buying-goods-143197645.jpg"
           />
         </Grid>
+        {/*  Sign up form*/}
         <Grid item xs={6}>
+          {/* Login Option */}
           <Typography variant="subtitle2" className={classes.text}>
             <Box fontWeight="light" textAlign="right">
               Already have an account?
@@ -187,10 +187,7 @@ function Signup() {
               </Link>
             </Box>
           </Typography>
-          {/* <Grid container>
-            <Grid item></Grid>
-          </Grid> */}
-
+          {/* Main Form */}
           <Typography variant="h5" className={[classes.text, classes.link]}>
             Create Account
           </Typography>
@@ -274,9 +271,7 @@ function Signup() {
               className={classes.button}
               clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
               buttonText="Login with Google"
-              onSuccess={(e) => {
-                console.log("success", e);
-              }}
+              onSuccess={sigupWithGoogle}
               onFailure={(e) => {
                 if (e.error == "idpiframe_initialization_failed") {
                   alert("Please Allow Cookies to login with google account");
@@ -287,14 +282,54 @@ function Signup() {
             />
             <FacebookLogin
               appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+              autoLoad={false}
               icon={<FacebookIcon style={{ padding: 10, color: "#3b5998" }} />}
               cssClass={classes.fb}
-              autoLoad={true}
               fields="name,email,picture"
               onClick={(e) => console.log(e)}
               callback={sigupWithFacebook}
             />
           </Grid>
+          <Button
+            onClick={() => {
+              console.log("Password-->", password);
+              // const salt1 = bcrypt.genSalt(10);
+              // const salt2 = bcrypt.genSalt(10);
+              // const hash1 = bcrypt.hashSync(password, salt1);
+              // const hash2 = bcrypt.hashSync(password, salt2);
+              // console.log(hash1, hash2);
+              bcrypt.genSalt(10, function (err, salt) {
+                if (err) {
+                  throw err;
+                } else {
+                  bcrypt.hash(password, salt, function (err, hash) {
+                    if (err) {
+                      throw err;
+                    } else {
+                      console.log(hash);
+                      //$2a$10$FEBywZh8u9M0Cec/0mWep.1kXrwKeiWDba6tdKvDfEBjyePJnDT7K
+                    }
+                  });
+                }
+              });
+              bcrypt.genSalt(10, function (err, salt) {
+                if (err) {
+                  throw err;
+                } else {
+                  bcrypt.hash(password, salt, function (err, hash) {
+                    if (err) {
+                      throw err;
+                    } else {
+                      console.log(hash);
+                      //$2a$10$FEBywZh8u9M0Cec/0mWep.1kXrwKeiWDba6tdKvDfEBjyePJnDT7K
+                    }
+                  });
+                }
+              });
+            }}
+          >
+            CheckSalt
+          </Button>
         </Grid>
       </Grid>
     </Paper>

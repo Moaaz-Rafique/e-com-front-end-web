@@ -4,6 +4,7 @@ import { NavBar, ProductList } from "../Components";
 import AddCategory from "../Containers/AddCategory";
 import AddProduct from "../Containers/AddProduct";
 import Home from "../Containers/Home";
+import LoginPage from "../Containers/login";
 import ProductPage from "../Containers/ProductPage";
 import Signup from "../Containers/Signup";
 
@@ -19,6 +20,7 @@ function AppRouter() {
           <Route exact path="/admin/addcategory" component={AddCategory} />
           <Route exact path="/product/:id" component={ProductPage} />
           <Route exact path="/signup" component={Signup} />
+          <Route exact path="/login" component={LoginPage} />
         </Switch>
       </Container>
     </Router>
