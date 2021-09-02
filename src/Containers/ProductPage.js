@@ -78,14 +78,6 @@ function ProductPage() {
   const [loading, setLoading] = useState(true);
   const [similarLoaded, setSimilarLoaded] = useState(false);
 
-  useEffect(() => {
-    // console.log(allProducts);
-    if (!allProducts?.[id]) {
-      setLoading(true);
-    }
-    setSimilarLoaded(false);
-    getProductFromId();
-  }, [id]);
   const getProductFromId = async () => {
     let query = {
       id,
@@ -103,6 +95,14 @@ function ProductPage() {
       console.log(err);
     }
   };
+  useEffect(() => {
+    // console.log(allProducts);
+    if (!allProducts?.[id]) {
+      setLoading(true);
+    }
+    setSimilarLoaded(false);
+    getProductFromId();
+  }, [id]);
   if (loading) {
     return "loading product";
   }

@@ -7,6 +7,7 @@
 
 #environment variables
 .env
+./cert
 # testing
 /coverage
 

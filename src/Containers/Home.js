@@ -12,9 +12,6 @@ function Home() {
       <MainPicture />
       <CategoryList />
       <ProductList />
-      <button
-        onClick={() => console.log(process.env.REACT_APP_NOT_SECRET_CODE)}
-      ></button>
     </Grid>
   );
 }

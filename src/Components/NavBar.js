@@ -1,5 +1,5 @@
 import { Icon, Grid, makeStyles, Typography } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useTheme } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 
@@ -59,7 +59,9 @@ function NavBar() {
     { icon: <FavoriteIcon /> },
     { icon: <ShoppingCartOutlinedIcon /> },
   ];
+  const history = useHistory();
   const [size, setSize] = useState([0, 0]);
+
   useLayoutEffect(() => {
     function updateSize() {
       setSize([window.innerWidth, window.innerHeight]);
@@ -73,7 +75,11 @@ function NavBar() {
     <Grid item xs={12} className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
         <Grid item xs={6} md={4} lg={6}>
-          <Typography variant="h4" style={{ minWidth: 105 }}>
+          <Typography
+            variant="h4"
+            style={{ minWidth: 105 }}
+            onClick={() => history.push("/")}
+          >
             <span style={{ color: theme.palette.primary.main }}>E</span>-shop
           </Typography>
         </Grid>
