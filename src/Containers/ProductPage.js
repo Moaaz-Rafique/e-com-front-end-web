@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { BASE_URL, FETCH_PRODUCT } from "../Constants/apis";
+import { ADD_CART, BASE_URL, FETCH_PRODUCT } from "../Constants/apis";
 import qs from "qs";
 import { Typography } from "@material-ui/core";
 import { ProductCard } from "../Components";
@@ -65,7 +65,9 @@ function ProductPage() {
     },
   }));
   const classes = useStyles();
-
+  const user = useSelector(
+    state => state.userReducer.user_details
+  )
   const { id } = useParams();
   const dispatch = useDispatch();
   const allProducts = useSelector(
@@ -95,6 +97,18 @@ function ProductPage() {
       console.log(err);
     }
   };
+  const addProductToCart= () =>{
+    try {
+       axios
+        .post(ADD_CART,{product:product?._id,user:user?._id}) 
+        .then((response) => console.log(response.data.data));
+        // console.log(user)
+      // axios
+      //   .post(ADD_PRODUCT, myProduct)
+    } catch (err) {
+      console.log(err);
+    }
+  }
   useEffect(() => {
     // console.log(allProducts);
     if (!allProducts?.[id]) {
@@ -103,7 +117,7 @@ function ProductPage() {
     setSimilarLoaded(false);
     getProductFromId();
   }, [id]);
-  if (loading) {
+  if (loading || !product) {
     return "loading product";
   }
   return (
@@ -159,8 +173,9 @@ function ProductPage() {
           <Button
             variant="outlined"
             className={[classes.button, classes.switchColors]}
+            onClick={addProductToCart}
           >
-            Add to basket
+            Add to Cart
           </Button>
         </div>
       </Grid>

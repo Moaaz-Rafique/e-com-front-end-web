@@ -7,7 +7,9 @@ import ShoppingCartOutlinedIcon from "@material-ui/icons/ShoppingCartOutlined";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { useLayoutEffect } from "react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 function NavBar() {
+  const currentRoute=useSelector(state=>state?.linkReducer?.currentRoute)
   const theme = useTheme();
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -57,7 +59,7 @@ function NavBar() {
   const navButtons = [
     { icon: <SearchIcon /> },
     { icon: <FavoriteIcon /> },
-    { icon: <ShoppingCartOutlinedIcon /> },
+    { icon: <ShoppingCartOutlinedIcon /> ,link:"/mycart"},
   ];
   const history = useHistory();
   const [size, setSize] = useState([0, 0]);
@@ -85,6 +87,7 @@ function NavBar() {
         </Grid>
         {size[0] > 1000 ? (
           <Grid item md={4} lg={4} className={classes.links}>
+            
             {navLinks.map((e, i) => {
               return (
                 <Link key={i} to={e.route} className={classes.link}>
@@ -98,10 +101,11 @@ function NavBar() {
         )}
         <Grid item xs={5} md={4} lg={2} className={classes.icons}>
           <Grid container justifyContent="space-around">
+          {currentRoute?currentRoute:'undef'}
             {navButtons.map((e, i) => {
               return (
                 <Grid key={i} item>
-                  <Link to={"#"} className={classes.icon}>
+                  <Link to={e.link || "#"} className={classes.icon}>
                     {e.icon}
                   </Link>
                 </Grid>

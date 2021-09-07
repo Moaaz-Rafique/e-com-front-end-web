@@ -22,6 +22,7 @@ export const FETCH_ALL_CART = `${URL}/catalog/carts`;
 export const ADD_CART = `${URL}/catalog/cart/add`;
 export const REMOVE_CART = `${URL}/catalog/cart/remove`;
 export const UPDATE_CART = `${URL}/catalog/cart/update`;
+export const GET_CURRENT_CART = `${URL}/catalog/user/cart/current`;
 
 //User apis
 export const FETCH_ALL_USER = `${URL}/catalog/users`;

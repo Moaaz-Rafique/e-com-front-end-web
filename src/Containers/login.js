@@ -8,16 +8,19 @@ import {
 } from "@material-ui/core";
 import { RemoveRedEye } from "@material-ui/icons";
 import { useState } from "react";
-import bcrypt from "bcryptjs";
 import axios from "axios";
 import { LOGIN_USER } from "../Constants/apis";
+import { SET_USER_DETAILS } from "../store/types";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
 
 function LoginPage() {
+  const dispatch=useDispatch()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordMask, setPasswordMask] = useState(true);
+  const history=useHistory()
   const loginHandler = () => {
-    const salt = bcrypt.genSaltSync(10);
     const re =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!email || !password) {
@@ -28,7 +31,7 @@ function LoginPage() {
       alert("Enter Valid Mail");
       return;
     }
-    const passwordHash = bcrypt.hashSync(password, salt);
+    const passwordHash = password;
     const newUser = {
       email,
       passwordHash,
@@ -37,8 +40,13 @@ function LoginPage() {
   };
   const loginUser = async (user) => {
     try {
+      console.log(user)
       const userData = await axios.post(LOGIN_USER, user);
       console.log(userData);
+      if(userData.data.success){
+        dispatch({type: SET_USER_DETAILS,payload: userData.data.data})
+        history.push("/")
+      }
     } catch (err) {
       console.log(err);
     }

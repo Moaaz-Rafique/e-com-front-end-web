@@ -15,11 +15,12 @@ import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
 import FacebookIcon from "@material-ui/icons/Facebook";
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useState } from "react";
-import bcrypt from "bcryptjs";
 import axios from "axios";
 import { SIGNUP_USER } from "../Constants/apis";
+import { useDispatch } from "react-redux";
+import { SET_USER_DETAILS } from "../store/types";
 
 function Signup() {
   const [username, setUsername] = useState("");
@@ -27,18 +28,21 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [passwordMask, setPasswordMask] = useState(true);
-
+  const dispatch=useDispatch()
+  const history = useHistory()
   const signupUser = async (user) => {
     try {
       const data = await axios.post(SIGNUP_USER, user);
-      console.log(data.data);
+      if(data.data.success){
+        dispatch({type: SET_USER_DETAILS,payload: data.data.data})
+        history.push('/')
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
   const authAndLoginWithEmail = () => {
-    const salt = bcrypt.genSaltSync(10);
     if (!username || !email || !password || !passwordConfirmation) {
       alert("You must enter all info correctly");
       return;
@@ -53,7 +57,7 @@ function Signup() {
       alert("Enter Valid Mail");
       return;
     }
-    const passwordHash = bcrypt.hashSync(password, salt);
+    const passwordHash = password;
     const newUser = {
       username,
       email,
@@ -62,6 +66,9 @@ function Signup() {
     };
     signupUser(newUser);
     // console.log(newUser);
+    
+    
+    
   };
 
   const sigupWithFacebook = (user) => {
@@ -85,7 +92,7 @@ function Signup() {
       imageUrl: user.imageUrl,
     };
     signupUser(newUser);
-    console.log(newUser);
+    console.log(e);
   };
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -139,7 +146,7 @@ function Signup() {
     },
     hr: { flex: 1, height: 0, borderColor: theme.palette.text.secondary },
     eye: {
-      color: theme.palette.text.secondary,
+      color: !passwordMask? theme.palette.primary.main :theme.palette.text.secondary,
     },
     p: {
       color: theme.palette.text.secondary,
@@ -290,46 +297,6 @@ function Signup() {
               callback={sigupWithFacebook}
             />
           </Grid>
-          <Button
-            onClick={() => {
-              console.log("Password-->", password);
-              // const salt1 = bcrypt.genSalt(10);
-              // const salt2 = bcrypt.genSalt(10);
-              // const hash1 = bcrypt.hashSync(password, salt1);
-              // const hash2 = bcrypt.hashSync(password, salt2);
-              // console.log(hash1, hash2);
-              bcrypt.genSalt(10, function (err, salt) {
-                if (err) {
-                  throw err;
-                } else {
-                  bcrypt.hash(password, salt, function (err, hash) {
-                    if (err) {
-                      throw err;
-                    } else {
-                      console.log(hash);
-                      //$2a$10$FEBywZh8u9M0Cec/0mWep.1kXrwKeiWDba6tdKvDfEBjyePJnDT7K
-                    }
-                  });
-                }
-              });
-              bcrypt.genSalt(10, function (err, salt) {
-                if (err) {
-                  throw err;
-                } else {
-                  bcrypt.hash(password, salt, function (err, hash) {
-                    if (err) {
-                      throw err;
-                    } else {
-                      console.log(hash);
-                      //$2a$10$FEBywZh8u9M0Cec/0mWep.1kXrwKeiWDba6tdKvDfEBjyePJnDT7K
-                    }
-                  });
-                }
-              });
-            }}
-          >
-            CheckSalt
-          </Button>
         </Grid>
       </Grid>
     </Paper>

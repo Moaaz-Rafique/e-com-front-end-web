@@ -7,6 +7,7 @@ import Home from "../Containers/Home";
 import LoginPage from "../Containers/login";
 import ProductPage from "../Containers/ProductPage";
 import Signup from "../Containers/Signup";
+import MyCart from "../Containers/MyCart";
 
 function AppRouter() {
   return (
@@ -21,6 +22,7 @@ function AppRouter() {
           <Route exact path="/product/:id" component={ProductPage} />
           <Route exact path="/signup" component={Signup} />
           <Route exact path="/login" component={LoginPage} />
+          <Route exact path="/mycart" component={MyCart} />
         </Switch>
       </Container>
     </Router>

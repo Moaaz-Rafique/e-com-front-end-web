@@ -3,6 +3,7 @@ import { SET_USER_DETAILS, SET_CURRENT_USER } from "../types";
 const INTIAL_STATE = {
   current_user: null,
   user_details: {
+    _id: "6123a3b8b1094424685248cc",
     name: "Guest User",
   },
 };

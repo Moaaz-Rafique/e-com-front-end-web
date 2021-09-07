@@ -6,10 +6,11 @@ import userReducer from "./Reducers/userReducer";
 import productReducer from "./Reducers/productReducer";
 import cartReducer from "./Reducers/cartReducer";
 import categoryReducer from "./Reducers/categoryReducer";
-
+import linkReducer from './Reducers/linkReducer.js'
 const persistConfig = {
   key: "root",
   storage,
+  blackList: [linkReducer]
 };
 
 const rootReducer = combineReducers({
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   productReducer,
   cartReducer,
   categoryReducer,
+  linkReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

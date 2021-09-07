@@ -4,11 +4,13 @@ import NavBar from "./NavBar";
 import MainPicture from "./MainPicture";
 import ProductList from "./ProductList.js";
 import CategoryList from "./CategoryList.js";
-export {
+import CartItem from "./CartItem";
+export {  
   DropZoneForImages,
   ProductCard,
   NavBar,
   MainPicture,
   ProductList,
   CategoryList,
+  CartItem,
 };
