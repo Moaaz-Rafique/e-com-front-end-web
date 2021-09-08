@@ -17,6 +17,7 @@ import { ProductCard } from "../Components";
 import { useSelector, useDispatch } from "react-redux";
 import { SET_PRODUCT_DETAILS, SET_SIMILAR_PRODUCTS } from "../store/types";
 function ProductPage() {
+  const user = useSelector((state) => state.userReducer?.userDetails);
   const useStyles = makeStyles((theme) => ({
     image: {
       background: "#f0f0f0",
@@ -65,9 +66,7 @@ function ProductPage() {
     },
   }));
   const classes = useStyles();
-  const user = useSelector(
-    state => state.userReducer.user_details
-  )
+  // const user = useSelector((state) => state.userReducer.user_details);
   const { id } = useParams();
   const dispatch = useDispatch();
   const allProducts = useSelector(
@@ -97,18 +96,22 @@ function ProductPage() {
       console.log(err);
     }
   };
-  const addProductToCart= () =>{
+  const addProductToCart = () => {
+    if (!user?._id) {
+      alert("Please login to add to cart");
+      return;
+    }
     try {
-       axios
-        .post(ADD_CART,{product:product?._id,user:user?._id}) 
+      axios
+        .post(ADD_CART, { product: product?._id, user: user?._id })
         .then((response) => console.log(response.data.data));
-        // console.log(user)
+      // console.log(user)
       // axios
       //   .post(ADD_PRODUCT, myProduct)
     } catch (err) {
       console.log(err);
     }
-  }
+  };
   useEffect(() => {
     // console.log(allProducts);
     if (!allProducts?.[id]) {

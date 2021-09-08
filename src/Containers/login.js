@@ -1,10 +1,12 @@
 import {
+  Box,
   Button,
   Grid,
   InputAdornment,
   InputLabel,
   makeStyles,
   TextField,
+  Typography,
 } from "@material-ui/core";
 import { RemoveRedEye } from "@material-ui/icons";
 import { useState } from "react";
@@ -13,13 +15,14 @@ import { LOGIN_USER } from "../Constants/apis";
 import { SET_USER_DETAILS } from "../store/types";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 
 function LoginPage() {
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordMask, setPasswordMask] = useState(true);
-  const history=useHistory()
+  const history = useHistory();
   const loginHandler = () => {
     const re =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -40,12 +43,12 @@ function LoginPage() {
   };
   const loginUser = async (user) => {
     try {
-      console.log(user)
+      console.log(user);
       const userData = await axios.post(LOGIN_USER, user);
       console.log(userData);
-      if(userData.data.success){
-        dispatch({type: SET_USER_DETAILS,payload: userData.data.data})
-        history.push("/")
+      if (userData.data.success) {
+        dispatch({ type: SET_USER_DETAILS, payload: userData.data.data });
+        history.push("/");
       }
     } catch (err) {
       console.log(err);
@@ -79,11 +82,22 @@ function LoginPage() {
     eye: {
       color: theme.palette.text.secondary,
     },
+    link: {
+      color: theme.palette.primary.main,
+    },
   }));
 
   const classes = useStyles();
   return (
     <Grid item xs={12} className={classes.text}>
+      <Typography variant="subtitle2" className={classes.text}>
+        <Box fontWeight="light" textAlign="right">
+          Don't have an account?
+          <Link to="/signup" className={classes.link}>
+            Signup
+          </Link>
+        </Box>
+      </Typography>
       <InputLabel>Email</InputLabel>
       <TextField
         type="email"

@@ -1,4 +1,4 @@
-import { SET_USER_DETAILS, SET_CURRENT_USER } from "../types";
+import { SET_USER_DETAILS, SET_CURRENT_USER, LOGOUT_USER } from "../types";
 
 const INTIAL_STATE = {
   current_user: null,
@@ -19,6 +19,12 @@ const reducer = (state = INTIAL_STATE, action) => {
       return {
         ...state,
         current_user: action.payload,
+      };
+    case LOGOUT_USER:
+      return {
+        ...state,
+        current_user: null,
+        user_details: null,
       };
     default:
       return state;

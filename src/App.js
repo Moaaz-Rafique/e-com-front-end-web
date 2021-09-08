@@ -34,6 +34,12 @@ function App() {
         //   borderColor: "#A7a8Ad",
         // },
       },
+      MuiInputBase: {
+        input: {
+          // textAlign: "center",
+          fontSize: "18px",
+        },
+      },
       MuiButton: {
         outlined: {
           color: "#A7a8Ad",

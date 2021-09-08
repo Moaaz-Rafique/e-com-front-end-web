@@ -7,9 +7,11 @@ import ShoppingCartOutlinedIcon from "@material-ui/icons/ShoppingCartOutlined";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { useLayoutEffect } from "react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { LOGOUT_USER } from "../store/types";
 function NavBar() {
-  const currentRoute=useSelector(state=>state?.linkReducer?.currentRoute)
+  // const currentRoute = useSelector((state) => state?.linkReducer?.currentRoute);
+  const user = useSelector((state) => state?.userReducer?.user_details);
   const theme = useTheme();
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -51,17 +53,18 @@ function NavBar() {
       name: "Products",
       route: "/products",
     },
-    {
-      name: "Services",
-      route: "/service",
-    },
+    // {
+    //   name: user ? "Logout" : "Login",
+    //   route: "/login",
+    // },
   ];
   const navButtons = [
     { icon: <SearchIcon /> },
     { icon: <FavoriteIcon /> },
-    { icon: <ShoppingCartOutlinedIcon /> ,link:"/mycart"},
+    { icon: <ShoppingCartOutlinedIcon />, link: "/mycart" },
   ];
   const history = useHistory();
+  const dispatch = useDispatch();
   const [size, setSize] = useState([0, 0]);
 
   useLayoutEffect(() => {
@@ -72,7 +75,14 @@ function NavBar() {
     updateSize();
     return () => window.removeEventListener("resize", updateSize);
   }, []);
-
+  const logoutUser = async (e) => {
+    if (user) {
+      await dispatch({ type: LOGOUT_USER });
+      history.push("/");
+    } else {
+      history.push("/login");
+    }
+  };
   return (
     <Grid item xs={12} className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
@@ -87,7 +97,6 @@ function NavBar() {
         </Grid>
         {size[0] > 1000 ? (
           <Grid item md={4} lg={4} className={classes.links}>
-            
             {navLinks.map((e, i) => {
               return (
                 <Link key={i} to={e.route} className={classes.link}>
@@ -95,13 +104,15 @@ function NavBar() {
                 </Link>
               );
             })}
+            <span className={classes.icon} onClick={logoutUser}>
+              {user ? "Logout" : "Login"}
+            </span>
           </Grid>
         ) : (
           ""
         )}
         <Grid item xs={5} md={4} lg={2} className={classes.icons}>
           <Grid container justifyContent="space-around">
-          {currentRoute?currentRoute:'undef'}
             {navButtons.map((e, i) => {
               return (
                 <Grid key={i} item>

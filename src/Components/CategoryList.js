@@ -51,7 +51,7 @@ function CategoryList() {
         >
           <Typography variant="body1">
             <Box>
-              {categories.map((category, i) => {
+              {categories?.map((category, i) => {
                 return (
                   <span key={i} style={{ padding: 25 }}>
                     {category.title}

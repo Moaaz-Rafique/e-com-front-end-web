@@ -14,7 +14,7 @@ function ProductList() {
   }, []);
   const getProductList = async () => {
     const data = await axios.get(FETCH_ALL_PRODUCTS);
-    dispatch({ type: SET_PRODUCT_LIST, payload: data.data.data }); // console.log(data.data);
+    dispatch({ type: SET_PRODUCT_LIST, payload: data?.data?.data }); // console.log(data.data);
   };
   return (
     <Grid item xs={12}>
@@ -24,7 +24,7 @@ function ProductList() {
         justifyContent="space-evenly"
         style={{ margin: 15 }}
       >
-        {products.map((product, i) => {
+        {products?.map((product, i) => {
           return <ProductCard key={i} product={product} />;
         })}
       </Grid>

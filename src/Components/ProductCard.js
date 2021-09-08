@@ -12,6 +12,7 @@ import { BASE_URL } from "../Constants/apis";
 
 function ProductCard(props) {
   const history = useHistory();
+
   const { product } = props;
   const { w, h } = props;
   const useStyles = makeStyles((theme) => ({
@@ -39,7 +40,6 @@ function ProductCard(props) {
     >
       <CardActionArea>
         <div
-          className={classes.imageDiv}
           onClick={() => {
             history.push("/product/" + product._id);
           }}
