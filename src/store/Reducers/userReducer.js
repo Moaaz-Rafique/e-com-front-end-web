@@ -11,8 +11,10 @@ const INTIAL_STATE = {
 const reducer = (state = INTIAL_STATE, action) => {
   switch (action.type) {
     case SET_USER_DETAILS:
+      console.log(action?.payload)
       return {
         ...state,
+        current_user:action?.payload?._id,
         user_details: action.payload,
       };
     case SET_CURRENT_USER:

@@ -9,13 +9,15 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { ADD_CART, BASE_URL, FETCH_PRODUCT } from "../Constants/apis";
 import qs from "qs";
 import { Typography } from "@material-ui/core";
 import { ProductCard } from "../Components";
 import { useSelector, useDispatch } from "react-redux";
 import { SET_PRODUCT_DETAILS, SET_SIMILAR_PRODUCTS } from "../store/types";
+import swal from 'sweetalert';
+ 
 function ProductPage() {
   const user = useSelector((state) => state.userReducer?.userDetails);
   const useStyles = makeStyles((theme) => ({
@@ -67,25 +69,26 @@ function ProductPage() {
   }));
   const classes = useStyles();
   // const user = useSelector((state) => state.userReducer.user_details);
+  const history= useHistory()
   const { id } = useParams();
   const dispatch = useDispatch();
   const allProducts = useSelector(
     (state) => state.productReducer.product_details
-  );
-  const product = useSelector(
-    (state) => state?.productReducer?.product_details?.[id]
-  );
+    );
+    const product = useSelector(
+      (state) => state?.productReducer?.product_details?.[id]
+      );
   const similar = useSelector((state) => state?.productReducer?.similar);
   const [loading, setLoading] = useState(true);
   const [similarLoaded, setSimilarLoaded] = useState(false);
-
+  
   const getProductFromId = async () => {
     let query = {
       id,
     };
     try {
       const data = await axios.get(FETCH_PRODUCT + qs.stringify(query));
-
+      
       // console.log(data.data);
       // setProduct(data.data.data);
       dispatch({ type: SET_PRODUCT_DETAILS, payload: data.data.data });
@@ -98,13 +101,25 @@ function ProductPage() {
   };
   const addProductToCart = () => {
     if (!user?._id) {
-      alert("Please login to add to cart");
+      // alert("Please login to add to cart");
+      swal({
+        title: "You are not logged in",
+        text: "Do you want to login to add product to your cart",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((goToLogin) => {
+        if (goToLogin) {
+          history.push('/signup')
+        } 
+      });
       return;
     }
     try {
       axios
-        .post(ADD_CART, { product: product?._id, user: user?._id })
-        .then((response) => console.log(response.data.data));
+      .post(ADD_CART, { product: product?._id, user: user?._id })
+      .then((response) => console.log(response.data.data));
       // console.log(user)
       // axios
       //   .post(ADD_PRODUCT, myProduct)

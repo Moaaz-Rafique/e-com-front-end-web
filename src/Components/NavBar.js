@@ -80,7 +80,7 @@ function NavBar() {
       await dispatch({ type: LOGOUT_USER });
       history.push("/");
     } else {
-      history.push("/login");
+      history.push("/signup");
     }
   };
   return (

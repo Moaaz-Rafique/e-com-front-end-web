@@ -17,11 +17,11 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 
-function LoginPage() {
+function LoginPage({setLoginVariable}) {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordMask, setPasswordMask] = useState(true);
+  const [passwordMask, setPasswordMask] = useState(false);
   const history = useHistory();
   const loginHandler = () => {
     const re =
@@ -89,13 +89,13 @@ function LoginPage() {
 
   const classes = useStyles();
   return (
-    <Grid item xs={12} className={classes.text}>
+    <Grid item xs={6} className={classes.text}>
       <Typography variant="subtitle2" className={classes.text}>
         <Box fontWeight="light" textAlign="right">
           Don't have an account?
-          <Link to="/signup" className={classes.link}>
+          <span onClick={()=>setLoginVariable(false)} className={classes.link}>
             Signup
-          </Link>
+          </span>
         </Box>
       </Typography>
       <InputLabel>Email</InputLabel>

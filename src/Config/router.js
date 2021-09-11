@@ -21,7 +21,7 @@ function AppRouter() {
           <Route exact path="/admin/addcategory" component={AddCategory} />
           <Route exact path="/product/:id" component={ProductPage} />
           <Route exact path="/signup" component={Signup} />
-          <Route exact path="/login" component={LoginPage} />
+          {/* <Route exact path="/login" component={LoginPage} /> */}
           <Route exact path="/mycart" component={MyCart} />
         </Switch>
       </Container>

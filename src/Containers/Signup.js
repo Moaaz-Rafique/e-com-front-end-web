@@ -21,24 +21,44 @@ import axios from "axios";
 import { SIGNUP_USER } from "../Constants/apis";
 import { useDispatch } from "react-redux";
 import { SET_USER_DETAILS } from "../store/types";
+import LoginPage from "./login";
+import swal from "sweetalert";
 
 function Signup() {
   const [username, setUsername] = useState("");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [passwordMask, setPasswordMask] = useState(true);
+
+  const [loginVariable,setLoginVariable]=useState(false)
+   
   const dispatch=useDispatch()
   const history = useHistory()
   const signupUser = async (user) => {
     try {
       const data = await axios.post(SIGNUP_USER, user);
-      if(data.data.success){
-        dispatch({type: SET_USER_DETAILS,payload: data.data.data})
-        history.push('/')
+      if(data?.data?.success){
+        if(data?.data?.newUser){
+          dispatch({type: SET_USER_DETAILS,payload: data.data.data})
+          swal("Congratulations","User Signup was successful","success")
+          history.push('/')
+        }
+        else {
+          dispatch({type: SET_USER_DETAILS,payload: data?.data?.existingData})
+          console.log(data?.data?.existingData)
+          swal("Welcome back "+data?.data?.existingData?.username,"","success")
+          history.push('/')  
+        }
+      }
+      else {
+        console.log(data)
       }
     } catch (err) {
-      console.log(err);
+      console.log(err)
+
+      // swal(err?.message)
     }
   };
 
@@ -92,7 +112,6 @@ function Signup() {
       imageUrl: user.imageUrl,
     };
     signupUser(newUser);
-    console.log(e);
   };
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -184,14 +203,15 @@ function Signup() {
           />
         </Grid>
         {/*  Sign up form*/}
-        <Grid item xs={6}>
+        { loginVariable ? <LoginPage setLoginVariable={setLoginVariable}/> :
+          <Grid item xs={6}>
           {/* Login Option */}
           <Typography variant="subtitle2" className={classes.text}>
             <Box fontWeight="light" textAlign="right">
               Already have an account?
-              <Link to="/login" className={classes.link}>
+              <span onClick={()=>setLoginVariable(true)} className={classes.link}>
                 Login
-              </Link>
+              </span>
             </Box>
           </Typography>
           {/* Main Form */}
@@ -298,6 +318,7 @@ function Signup() {
             />
           </Grid>
         </Grid>
+        }
       </Grid>
     </Paper>
   );

@@ -28,4 +28,5 @@ export const GET_CURRENT_CART = `${URL}/catalog/user/cart/current`;
 export const FETCH_ALL_USER = `${URL}/catalog/users`;
 export const FETCH_USER = `${URL}/catalog/user`;
 export const LOGIN_USER = `${URL}/catalog/login`;
+// export const SIGNUP_USER_WITH_EMAIL = `${URL}/catalog/signupwithemail`;
 export const SIGNUP_USER = `${URL}/catalog/signup`;
