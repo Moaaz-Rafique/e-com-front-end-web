@@ -5,7 +5,8 @@ import MainPicture from "./MainPicture";
 import ProductList from "./ProductList.js";
 import CategoryList from "./CategoryList.js";
 import CartItem from "./CartItem";
-export {  
+import LoginPage from "./Login";
+export {
   DropZoneForImages,
   ProductCard,
   NavBar,
@@ -13,4 +14,5 @@ export {
   ProductList,
   CategoryList,
   CartItem,
+  LoginPage,
 };

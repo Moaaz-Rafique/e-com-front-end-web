@@ -10,16 +10,21 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
-import { ADD_CART, BASE_URL, FETCH_PRODUCT } from "../Constants/apis";
+import {
+  ADD_CART,
+  BASE_URL,
+  FETCH_PRODUCT,
+  REMOVE_PRODUCT,
+} from "../Constants/apis";
 import qs from "qs";
 import { Typography } from "@material-ui/core";
 import { ProductCard } from "../Components";
 import { useSelector, useDispatch } from "react-redux";
 import { SET_PRODUCT_DETAILS, SET_SIMILAR_PRODUCTS } from "../store/types";
-import swal from 'sweetalert';
- 
+import swal from "sweetalert";
+
 function ProductPage() {
-  const user = useSelector((state) => state.userReducer?.userDetails);
+  const user = useSelector((state) => state?.userReducer?.user_details);
   const useStyles = makeStyles((theme) => ({
     image: {
       background: "#f0f0f0",
@@ -69,31 +74,33 @@ function ProductPage() {
   }));
   const classes = useStyles();
   // const user = useSelector((state) => state.userReducer.user_details);
-  const history= useHistory()
+  const history = useHistory();
   const { id } = useParams();
   const dispatch = useDispatch();
   const allProducts = useSelector(
     (state) => state.productReducer.product_details
-    );
-    const product = useSelector(
-      (state) => state?.productReducer?.product_details?.[id]
-      );
+  );
+  const product = useSelector(
+    (state) => state?.productReducer?.product_details?.[id]
+  );
   const similar = useSelector((state) => state?.productReducer?.similar);
   const [loading, setLoading] = useState(true);
   const [similarLoaded, setSimilarLoaded] = useState(false);
-  
+
   const getProductFromId = async () => {
     let query = {
       id,
     };
+    console.log(id);
     try {
       const data = await axios.get(FETCH_PRODUCT + qs.stringify(query));
-      
-      // console.log(data.data);
-      // setProduct(data.data.data);
+
+      console.log(data.data);
       dispatch({ type: SET_PRODUCT_DETAILS, payload: data.data.data });
       dispatch({ type: SET_SIMILAR_PRODUCTS, payload: data.data.similar });
+      // setProduct(data.data.data);
       setLoading(false);
+
       setSimilarLoaded(true);
     } catch (err) {
       console.log(err);
@@ -108,18 +115,17 @@ function ProductPage() {
         icon: "warning",
         buttons: true,
         dangerMode: true,
-      })
-      .then((goToLogin) => {
+      }).then((goToLogin) => {
         if (goToLogin) {
-          history.push('/signup')
-        } 
+          history.push("/signup");
+        }
       });
       return;
     }
     try {
       axios
-      .post(ADD_CART, { product: product?._id, user: user?._id })
-      .then((response) => console.log(response.data.data));
+        .post(ADD_CART, { product: product?._id, user: user?._id })
+        .then((response) => console.log(response.data.data));
       // console.log(user)
       // axios
       //   .post(ADD_PRODUCT, myProduct)
@@ -127,8 +133,37 @@ function ProductPage() {
       console.log(err);
     }
   };
+  const handleUpdateProduct = () => {
+    history.push("/admin/product/" + id);
+  };
+  const handleRemoveProduct = async () => {
+    console.log("what");
+
+    swal({
+      title: "This action is irreversible",
+      text: "Are you sure you want to remove this product?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+      confirmButtonColor: "#DD6B55",
+    }).then((removeAnyway) => {
+      if (removeAnyway) {
+        // history.push("/signup");
+        axios.post(REMOVE_PRODUCT + "/?id=" + product?._id);
+        swal("This product has been removed successfully", "", "success").then(
+          () => {
+            history.push("/");
+          }
+        );
+      } else {
+        swal("Your product is safe", "", "success");
+      }
+    });
+    return;
+  };
   useEffect(() => {
     // console.log(allProducts);
+    setLoading(false);
     if (!allProducts?.[id]) {
       setLoading(true);
     }
@@ -180,22 +215,47 @@ function ProductPage() {
         <Typography variant="h5" className={classes.text} color="primary">
           <Box>Rs. {product?.price}</Box>
         </Typography>
-        <div
-          style={{
-            width: "100%",
-          }}
-        >
-          <Button variant="outlined" className={classes.button}>
-            Buy Now
-          </Button>
-          <Button
-            variant="outlined"
-            className={[classes.button, classes.switchColors]}
-            onClick={addProductToCart}
+        {user?.status == "admin" ? (
+          <div
+            style={{
+              width: "100%",
+            }}
           >
-            Add to Cart
-          </Button>
-        </div>
+            <Button
+              variant="outlined"
+              className={[classes.button, classes.switchColors]}
+              onClick={handleUpdateProduct}
+            >
+              Update Product
+            </Button>
+            <Button
+              variant="outlined"
+              className={classes.button}
+              onClick={handleRemoveProduct}
+            >
+              Remove Product
+            </Button>
+          </div>
+        ) : (
+          <div
+            style={{
+              width: "100%",
+            }}
+          >
+            <Button variant="outlined" className={classes.button}>
+              {/* {user?.status || "undef"} */}
+              Buy Now
+            </Button>
+            <Button
+              variant="outlined"
+              className={[classes.button, classes.switchColors]}
+              onClick={addProductToCart}
+              // onClick={() => console.log(user)}
+            >
+              Add to Cart
+            </Button>
+          </div>
+        )}
       </Grid>
       <Grid item sm={12} xs={11}>
         <Typography variant="subtitle1">Similar Items: </Typography>
@@ -216,6 +276,7 @@ function ProductPage() {
                 );
               })
             : "LOADING SIMILAR PRODUCTS"}
+          {/* <Button onClick={() => console.log(similar)}>show sim</Button> */}
         </Grid>
       </Grid>
     </Grid>

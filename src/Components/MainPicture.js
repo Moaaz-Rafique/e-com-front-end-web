@@ -8,7 +8,6 @@ import {
   Typography,
   useTheme,
 } from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
 import { makeStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import { useLayoutEffect } from "react";
@@ -38,7 +37,7 @@ function MainPicture() {
       height: "100%",
     },
     filledInput: {
-      padding: "10px 40px",
+      padding: "10px",
       //   paddingRight: 20,
       //   paddingLeft: 20,
       width: "100%",
@@ -81,13 +80,6 @@ function MainPicture() {
             <Box fontWeight="fontWeightBold" p={size[0] > 800 ? 8 : 2}>
               Get The Best Products of The World <br />
               <Paper className={classes.filledInput}>
-                <IconButton
-                  type="submit"
-                  className={classes.iconButton}
-                  aria-label="search"
-                >
-                  <SearchIcon />
-                </IconButton>
                 <InputBase
                   className={classes.input}
                   placeholder="Search your favorite products"

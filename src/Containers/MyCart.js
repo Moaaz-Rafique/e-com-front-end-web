@@ -109,7 +109,7 @@ function MyCart() {
   }));
   const classes = useStyles();
   if (!myCart?.length) {
-    return "the products you add to cart will apper hear";
+    return "the products you add to cart will appear hear";
   }
   return (
     <Grid container className={classes.root}>

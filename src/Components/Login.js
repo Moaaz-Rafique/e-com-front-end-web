@@ -16,8 +16,9 @@ import { SET_USER_DETAILS } from "../store/types";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
+import swal from "sweetalert";
 
-function LoginPage({setLoginVariable}) {
+function LoginPage({ setLoginVariable }) {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,11 +28,11 @@ function LoginPage({setLoginVariable}) {
     const re =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!email || !password) {
-      alert("You must enter all info correctly");
+      swal("You must enter all info correctly", "warning");
       return;
     }
     if (!re.test(email)) {
-      alert("Enter Valid Mail");
+      swal("Enter Valid Mail", "error");
       return;
     }
     const passwordHash = password;
@@ -93,7 +94,10 @@ function LoginPage({setLoginVariable}) {
       <Typography variant="subtitle2" className={classes.text}>
         <Box fontWeight="light" textAlign="right">
           Don't have an account?
-          <span onClick={()=>setLoginVariable(false)} className={classes.link}>
+          <span
+            onClick={() => setLoginVariable(false)}
+            className={classes.link}
+          >
             Signup
           </span>
         </Box>
@@ -110,7 +114,7 @@ function LoginPage({setLoginVariable}) {
       <Grid item sm={12}>
         <InputLabel>Password</InputLabel>
         <TextField
-          type={passwordMask ? "password" : "text"}
+          type={!passwordMask ? "password" : "text"}
           variant="outlined"
           className={classes.inputMain}
           value={password}

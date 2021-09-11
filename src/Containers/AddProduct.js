@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { ADD_PRODUCT, FETCH_ALL_CATEGORIES } from "../Constants/apis";
+import {
+  ADD_PRODUCT,
+  BASE_URL,
+  FETCH_ALL_CATEGORIES,
+  FETCH_PRODUCT,
+  UPDATE_PRODUCT,
+} from "../Constants/apis";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -9,9 +15,16 @@ import {
   Grid,
   InputLabel,
   Paper,
+  Typography,
+  Button,
 } from "@material-ui/core";
 import DropZoneForImages from "../Components/DropZoneForImages";
-import { Button } from "@material-ui/core";
+import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+
+import CloseIcon from "@material-ui/icons/Close";
+import { SET_PRODUCT_DETAILS } from "../store/types";
+import qs from "qs";
 
 function AddProduct() {
   const useStyles = makeStyles((theme) => ({
@@ -40,9 +53,19 @@ function AddProduct() {
 
       width: "100%",
     },
+    category: {
+      padding: 10,
+      borderRadius: 20,
+    },
   }));
-  const [data, setData] = useState({});
-  const [selectedImage, setSelectedImage] = useState(null);
+
+  const { id } = useParams();
+  const product = useSelector(
+    (state) => state?.productReducer?.product_details?.[id]
+  );
+  const dispatch = useDispatch();
+
+  const [selectedImage, setSelectedImage] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -50,10 +73,42 @@ function AddProduct() {
   const [productCategories, setProductCategories] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
   const [myAlert, setMyAlert] = useState(false);
+  const imageUrl = product
+    ? `${BASE_URL}/images/${product?._id}/${product?.image}`
+    : null;
   useEffect(() => {
     getAllCategories();
-    console.log(allCategories);
+    if (product && id) {
+      // setSelectedImage(Object.assign({ file: imageUrl }));
+      loadProduct();
+      setTitle(product?.title);
+      setDescription(product?.description);
+      setPrice(product?.price);
+      setProductCategories([...product?.categories]);
+    }
+    // console.log(allCategories);
   }, []);
+  const loadProduct = async () => {
+    let query = {
+      id,
+    };
+    try {
+      const data = await axios.get(FETCH_PRODUCT + qs.stringify(query));
+
+      dispatch({ type: SET_PRODUCT_DETAILS, payload: data.data.data });
+      // dispatch({ type: SET_SIMILAR_PRODUCTS, payload: data.data.similar });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const removeCategory = (id) => {
+    const newCategories = [...productCategories];
+    const index = newCategories.indexOf(id);
+    if (index !== -1) {
+      newCategories.splice(index, 1);
+    }
+    setProductCategories(newCategories);
+  };
   const addProduct = () => {
     const myProduct = new FormData();
     if (!selectedImage) {
@@ -68,9 +123,27 @@ function AddProduct() {
       myProduct.append("categories", category);
     }
     try {
-      axios
-        .post(ADD_PRODUCT, myProduct)
-        .then((response) => setData(response.data.data));
+      axios.post(ADD_PRODUCT, myProduct);
+      // .then((response) => console.log(response.data.data));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const updateProduct = async () => {
+    const myProduct = new FormData();
+
+    myProduct.append("_id", product?._id);
+    if (selectedImage) myProduct.append("image", selectedImage);
+    myProduct.append("title", title);
+    myProduct.append("price", price);
+    myProduct.append("description", description);
+    for (const category of productCategories) {
+      myProduct.append("categories", category);
+    }
+    try {
+      console.log(productCategories);
+      const data = await axios.post(UPDATE_PRODUCT, myProduct);
+      dispatch({ type: SET_PRODUCT_DETAILS, payload: data.data.data });
     } catch (err) {
       console.log(err);
     }
@@ -86,6 +159,8 @@ function AddProduct() {
   };
   const addProductCategory = () => {
     // console.log(productCategories);
+    if (productCategories.findIndex((e) => e == selectedCategory) > -1) return;
+    else if (!selectedCategory) return;
     setProductCategories([...productCategories, selectedCategory]);
   };
   const classes = useStyles();
@@ -172,6 +247,40 @@ function AddProduct() {
             item
             xs={12}
             className={classes.root}
+            style={{ textAlign: "center" }}
+          >
+            {productCategories?.map((e, i) => {
+              return (
+                <Typography
+                  key={i}
+                  // sty
+                  display="inline"
+                  className={classes.category}
+                  style={{
+                    color: allCategories?.find((i) => {
+                      return i._id == e;
+                    })?.color,
+                  }}
+                >
+                  <Button>
+                    {
+                      allCategories?.find((i) => {
+                        return i._id == e;
+                      })?.title
+                    }
+                    <CloseIcon
+                      color="primary"
+                      onClick={() => removeCategory(e)}
+                    />
+                  </Button>
+                </Typography>
+              );
+            })}
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            className={classes.root}
             // justifyContent="center"
             // alignItems="center"
             style={{ textAlign: "center" }}
@@ -179,6 +288,7 @@ function AddProduct() {
             <DropZoneForImages
               setSelectedImage={setSelectedImage}
               imgError={myAlert}
+              selectedImage={imageUrl}
             />
             <div
               style={{
@@ -187,14 +297,25 @@ function AddProduct() {
                 justifyContent: "center",
               }}
             >
-              <Button
-                variant="outlined"
-                onClick={addProduct}
-                style={{ width: "100%", height: "47.5px", margin: 10 }}
-              >
-                {" "}
-                Add product
-              </Button>
+              {id ? (
+                <Button
+                  variant="outlined"
+                  onClick={updateProduct}
+                  style={{ width: "100%", height: "47.5px", margin: 10 }}
+                >
+                  {" "}
+                  update product
+                </Button>
+              ) : (
+                <Button
+                  variant="outlined"
+                  onClick={addProduct}
+                  style={{ width: "100%", height: "47.5px", margin: 10 }}
+                >
+                  {" "}
+                  Add product
+                </Button>
+              )}
             </div>
           </Grid>
         </Paper>

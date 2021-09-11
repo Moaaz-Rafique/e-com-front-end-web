@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-function DropZoneForImages({ setSelectedImage, imgError }) {
+function DropZoneForImages({ setSelectedImage, imgError, selectedImage }) {
   const [files, setFiles] = useState([]);
+  useEffect(() => {
+    if (selectedImage && files.length == 0) {
+      setFiles([
+        // ...files,
+        Object.assign(selectedImage, {
+          preview: selectedImage,
+        }),
+      ]);
+    }
+    // console.log("myImage==>", selectedImage, selectedImage);
+  }, [selectedImage]);
   const thumbsContainer = {
     display: "flex",
     flexDirection: "row",
@@ -38,6 +49,7 @@ function DropZoneForImages({ setSelectedImage, imgError }) {
     display: "flex",
     minWidth: 0,
     overflow: "hidden",
+    backgroundColor: "#f0f0f0",
   };
 
   const img = {
@@ -60,8 +72,8 @@ function DropZoneForImages({ setSelectedImage, imgError }) {
     },
   });
 
-  const thumbs = files.map((file) => (
-    <div style={thumb} key={file.name}>
+  const thumbs = files?.map((file, i) => (
+    <div style={thumb} key={i}>
       <div style={thumbInner}>
         <img src={file.preview} style={img} />
       </div>

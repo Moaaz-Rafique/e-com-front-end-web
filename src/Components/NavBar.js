@@ -4,7 +4,7 @@ import { useTheme } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 
 import ShoppingCartOutlinedIcon from "@material-ui/icons/ShoppingCartOutlined";
-import FavoriteIcon from "@material-ui/icons/Favorite";
+import PersonOutlineOutlinedIcon from "@material-ui/icons/PersonOutlineOutlined";
 import { useLayoutEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -60,7 +60,6 @@ function NavBar() {
   ];
   const navButtons = [
     { icon: <SearchIcon /> },
-    { icon: <FavoriteIcon /> },
     { icon: <ShoppingCartOutlinedIcon />, link: "/mycart" },
   ];
   const history = useHistory();
@@ -95,7 +94,7 @@ function NavBar() {
             <span style={{ color: theme.palette.primary.main }}>E</span>-shop
           </Typography>
         </Grid>
-        {size[0] > 1000 ? (
+        {/* {size[0] > 1000 ? (
           <Grid item md={4} lg={4} className={classes.links}>
             {navLinks.map((e, i) => {
               return (
@@ -104,13 +103,16 @@ function NavBar() {
                 </Link>
               );
             })}
-            <span className={classes.icon} onClick={logoutUser}>
-              {user ? "Logout" : "Login"}
-            </span>
           </Grid>
         ) : (
           ""
-        )}
+        )} */}
+
+        {user?.status == "admin" ? (
+          <Grid item>
+            <Link to="/admin">Admin Page</Link>
+          </Grid>
+        ) : null}
         <Grid item xs={5} md={4} lg={2} className={classes.icons}>
           <Grid container justifyContent="space-around">
             {navButtons.map((e, i) => {
@@ -122,6 +124,10 @@ function NavBar() {
                 </Grid>
               );
             })}
+
+            <Grid item>
+              <PersonOutlineOutlinedIcon onClick={logoutUser} />
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
