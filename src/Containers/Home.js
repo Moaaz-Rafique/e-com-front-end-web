@@ -5,11 +5,11 @@ import { SET_CURRENT_ROUTE } from "../store/types";
 import { useEffect } from "react";
 
 function Home() {
-  const dispatch=useDispatch()
-  useEffect(()=>{
-    console.log('weser')
-    dispatch({type:SET_CURRENT_ROUTE,payload:"aasd"})
-  },[])
+  const dispatch = useDispatch();
+  useEffect(() => {
+    console.log("weser");
+    dispatch({ type: SET_CURRENT_ROUTE, payload: "aasd" });
+  }, []);
   return (
     <Grid
       container
@@ -18,7 +18,7 @@ function Home() {
       alignItems="stretch"
     >
       <MainPicture />
-      <CategoryList />
+      {/* <CategoryList /> */}
       <ProductList />
     </Grid>
   );

@@ -49,7 +49,7 @@ function Signup() {
             type: SET_USER_DETAILS,
             payload: data?.data?.existingData,
           });
-          console.log(data?.data?.existingData);
+          // console.log(data?.data?.existingData);
           swal(
             "Welcome back " + data?.data?.existingData?.username,
             "",
@@ -58,11 +58,15 @@ function Signup() {
           history.push("/");
         }
       } else {
-        console.log(data);
+        // console.log(data);
       }
-    } catch (err) {
-      console.log(err);
-
+    } catch (error) {
+      // console.log(err);
+      swal(
+        "Error updating category",
+        error?.response?.data?.message || "unknown Error",
+        "error"
+      );
       // swal(err?.message)
     }
   };
@@ -95,6 +99,7 @@ function Signup() {
   };
 
   const sigupWithFacebook = (user) => {
+    console.log(user);
     const newUser = {
       username: user.name,
       id: user.id,
@@ -103,7 +108,7 @@ function Signup() {
       imageUrl: user.picture.data.url,
     };
     signupUser(newUser);
-    console.log(newUser);
+    // console.log(newUser);
   };
   const sigupWithGoogle = (e) => {
     const user = e.profileObj;
@@ -261,7 +266,7 @@ function Signup() {
                             // color="primary"
                             className={classes.eye}
                             onClick={() => {
-                              console.log(passwordMask);
+                              // console.log(passwordMask);
                               setPasswordMask(!passwordMask);
                             }}
                           />
@@ -316,7 +321,7 @@ function Signup() {
                     swal("Please Allow Cookies to login with google account");
                   }
                   swal("Failed", e.details || e.error, "error");
-                  console.log("failed", e);
+                  // console.log("failed", e);
                 }}
                 cookiePolicy={"single_host_origin"}
               />

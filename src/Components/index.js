@@ -6,6 +6,8 @@ import ProductList from "./ProductList.js";
 import CategoryList from "./CategoryList.js";
 import CartItem from "./CartItem";
 import LoginPage from "./Login";
+import AdminPanel from "./AdminPanel";
+import CategoryCard from "./CategoryCard";
 export {
   DropZoneForImages,
   ProductCard,
@@ -15,4 +17,6 @@ export {
   CategoryList,
   CartItem,
   LoginPage,
+  AdminPanel,
+  CategoryCard,
 };

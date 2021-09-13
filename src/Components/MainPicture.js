@@ -11,6 +11,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import { useLayoutEffect } from "react";
+import SearchIcon from "@material-ui/icons/Search";
 
 function MainPicture() {
   const [size, setSize] = useState([0, 0]);
@@ -80,6 +81,13 @@ function MainPicture() {
             <Box fontWeight="fontWeightBold" p={size[0] > 800 ? 8 : 2}>
               Get The Best Products of The World <br />
               <Paper className={classes.filledInput}>
+                <IconButton
+                  type="submit"
+                  className={classes.iconButton}
+                  aria-label="search"
+                >
+                  <SearchIcon />
+                </IconButton>
                 <InputBase
                   className={classes.input}
                   placeholder="Search your favorite products"

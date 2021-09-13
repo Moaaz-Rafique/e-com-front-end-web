@@ -22,6 +22,8 @@ import { ProductCard } from "../Components";
 import { useSelector, useDispatch } from "react-redux";
 import { SET_PRODUCT_DETAILS, SET_SIMILAR_PRODUCTS } from "../store/types";
 import swal from "sweetalert";
+import NotFound from "../Extras/NotFound";
+import NetworkError from "../Extras/NetworkError";
 
 function ProductPage() {
   const user = useSelector((state) => state?.userReducer?.user_details);
@@ -84,6 +86,7 @@ function ProductPage() {
     (state) => state?.productReducer?.product_details?.[id]
   );
   const similar = useSelector((state) => state?.productReducer?.similar);
+  const [networkError, setNetworkError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [similarLoaded, setSimilarLoaded] = useState(false);
 
@@ -102,8 +105,18 @@ function ProductPage() {
       setLoading(false);
 
       setSimilarLoaded(true);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      if (!error.response) {
+        // network error
+        setNetworkError(true);
+      } else {
+        // this.errorStatus = error.response.data.message;
+        swal(
+          "Error loading product",
+          error?.response?.data?.message || "unknown Error",
+          "error"
+        );
+      }
     }
   };
   const addProductToCart = () => {
@@ -149,12 +162,28 @@ function ProductPage() {
     }).then((removeAnyway) => {
       if (removeAnyway) {
         // history.push("/signup");
-        axios.post(REMOVE_PRODUCT + "/?id=" + product?._id);
-        swal("This product has been removed successfully", "", "success").then(
-          () => {
+        try {
+          axios.post(REMOVE_PRODUCT + "/?id=" + product?._id);
+          swal(
+            "This product has been removed successfully",
+            "",
+            "success"
+          ).then(() => {
             history.push("/");
+          });
+        } catch (error) {
+          if (!error.response) {
+            // network error
+            setNetworkError(true);
+          } else {
+            // this.errorStatus = error.response.data.message;
+            swal(
+              "Error removing product",
+              error?.response?.data?.message || "unknown Error",
+              "error"
+            );
           }
-        );
+        }
       } else {
         swal("Your product is safe", "", "success");
       }
@@ -170,8 +199,13 @@ function ProductPage() {
     setSimilarLoaded(false);
     getProductFromId();
   }, [id]);
-  if (loading || !product) {
+  if (networkError) {
+    return <NetworkError />;
+  }
+  if (loading) {
     return "loading product";
+  } else if (!product) {
+    return <NotFound />;
   }
   return (
     <Grid container direction="row" justifyContent="space-between">

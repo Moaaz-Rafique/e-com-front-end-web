@@ -5,7 +5,7 @@ import {
   FETCH_ALL_CATEGORIES,
   FETCH_PRODUCT,
   UPDATE_PRODUCT,
-} from "../Constants/apis";
+} from "../../Constants/apis";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -18,12 +18,12 @@ import {
   Typography,
   Button,
 } from "@material-ui/core";
-import DropZoneForImages from "../Components/DropZoneForImages";
-import { useParams } from "react-router";
+import DropZoneForImages from "../../Components/DropZoneForImages";
+import { useHistory, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 
 import CloseIcon from "@material-ui/icons/Close";
-import { SET_PRODUCT_DETAILS } from "../store/types";
+import { SET_CATEGORIES, SET_PRODUCT_DETAILS } from "../../store/types";
 import qs from "qs";
 
 function AddProduct() {
@@ -59,6 +59,8 @@ function AddProduct() {
     },
   }));
 
+  const user = useSelector((state) => state?.userReducer?.user_details);
+  const history = useHistory();
   const { id } = useParams();
   const product = useSelector(
     (state) => state?.productReducer?.product_details?.[id]
@@ -71,12 +73,17 @@ function AddProduct() {
   const [price, setPrice] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [productCategories, setProductCategories] = useState([]);
-  const [allCategories, setAllCategories] = useState([]);
+  const allCategories = useSelector(
+    (state) => state?.categoryReducer?.categories
+  );
   const [myAlert, setMyAlert] = useState(false);
   const imageUrl = product
     ? `${BASE_URL}/images/${product?._id}/${product?.image}`
     : null;
   useEffect(() => {
+    if (user.status != "admin") {
+      history.push("/");
+    }
     getAllCategories();
     if (product && id) {
       // setSelectedImage(Object.assign({ file: imageUrl }));
@@ -148,11 +155,11 @@ function AddProduct() {
       console.log(err);
     }
   };
-  const getAllCategories = () => {
+  const getAllCategories = async () => {
     try {
-      axios
-        .get(FETCH_ALL_CATEGORIES)
-        .then((response) => setAllCategories(response.data.data));
+      const data = await axios.get(FETCH_ALL_CATEGORIES);
+      // .then((response) => setAllCategories(response.data.data));
+      dispatch({ type: SET_CATEGORIES, payload: data.data.data });
     } catch (err) {
       console.log(err);
     }
@@ -168,7 +175,7 @@ function AddProduct() {
   return (
     <Grid container direction="column-reverse" alignItems="center">
       <Grid item xs={12}>
-        <Paper elevation={3} className={classes.paper}>
+        <Paper elevation={0} className={classes.paper}>
           <Grid
             container
             // xs={12}
