@@ -38,10 +38,12 @@ function MainPicture() {
       height: "100%",
     },
     filledInput: {
-      padding: "10px",
+      display: "flex",
       //   paddingRight: 20,
       //   paddingLeft: 20,
       width: "100%",
+      // height: 50,
+      wrap: "no-wrap",
       fontSize: 20,
       background: theme.palette.secondary.main,
       borderRadius: 25,
@@ -55,7 +57,7 @@ function MainPicture() {
       width: "80%",
     },
     iconButton: {
-      padding: 10,
+      // padding: 10,
     },
     gridImage: {
       background: "yellow",
@@ -81,11 +83,7 @@ function MainPicture() {
             <Box fontWeight="fontWeightBold" p={size[0] > 800 ? 8 : 2}>
               Get The Best Products of The World <br />
               <Paper className={classes.filledInput}>
-                <IconButton
-                  type="submit"
-                  className={classes.iconButton}
-                  aria-label="search"
-                >
+                <IconButton className={classes.iconButton} aria-label="search">
                   <SearchIcon />
                 </IconButton>
                 <InputBase

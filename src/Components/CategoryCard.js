@@ -1,8 +1,5 @@
-import { Button, Paper, Typography } from "@material-ui/core";
-import axios from "axios";
+import { Paper, Typography } from "@material-ui/core";
 import { useState } from "react";
-import swal from "sweetalert";
-import { REMOVE_CATEGORY } from "../Constants/apis";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import { AddCategory } from "../Containers/AdminPaths";

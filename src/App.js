@@ -4,7 +4,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import configStore from "./store";
 import { ThemeProvider } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
-
+import "./App.css";
 function App() {
   const { store, persistor } = configStore();
   const theme = createTheme({
@@ -37,7 +37,12 @@ function App() {
       MuiInputBase: {
         input: {
           // textAlign: "center",
-          fontSize: "18px",
+          // fontSize: "18px",
+        },
+      },
+      MuiAvatar: {
+        root: {
+          background: "#f0f0f0",
         },
       },
       MuiButton: {

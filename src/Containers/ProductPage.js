@@ -270,26 +270,29 @@ function ProductPage() {
               Remove Product
             </Button>
           </div>
-        ) : (
-          <div
-            style={{
-              width: "100%",
-            }}
+        ) : null}
+
+        <div
+          style={{
+            width: "100%",
+          }}
+        >
+          <Button
+            variant="outlined"
+            className={[classes.button, classes.switchColors]}
           >
-            <Button variant="outlined" className={classes.button}>
-              {/* {user?.status || "undef"} */}
-              Buy Now
-            </Button>
-            <Button
-              variant="outlined"
-              className={[classes.button, classes.switchColors]}
-              onClick={addProductToCart}
-              // onClick={() => console.log(user)}
-            >
-              Add to Cart
-            </Button>
-          </div>
-        )}
+            {/* {user?.status || "undef"} */}
+            Buy Now
+          </Button>
+          <Button
+            variant="outlined"
+            className={classes.button}
+            onClick={addProductToCart}
+            // onClick={() => console.log(user)}
+          >
+            Add to Cart
+          </Button>
+        </div>
       </Grid>
       <Grid item sm={12} xs={11}>
         <Typography variant="subtitle1">Similar Items: </Typography>

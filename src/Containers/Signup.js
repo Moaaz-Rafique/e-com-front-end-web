@@ -99,7 +99,7 @@ function Signup() {
   };
 
   const sigupWithFacebook = (user) => {
-    console.log(user);
+    // console.log(user);
     const newUser = {
       username: user.name,
       id: user.id,

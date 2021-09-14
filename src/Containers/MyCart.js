@@ -1,10 +1,14 @@
 import {
   Button,
   Grid,
-  Input,
   InputBase,
   makeStyles,
-  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from "@material-ui/core";
 import axios from "axios";
@@ -66,11 +70,14 @@ function MyCart() {
       //   color: theme.palette.text.secondary,
       //   background: "#eee",
     },
-    titles: {
+    text: {
       padding: 10,
       paddingTop: 20,
       color: "#eee",
       color: theme.palette.text.secondary,
+      fontSize: "18px",
+      border: ".1px solid #ddd",
+      textAlign: "center",
       //   background: "#eee",
     },
     bottomTitles: {
@@ -106,6 +113,12 @@ function MyCart() {
     paymentTitles: {
       margin: "20px 10px",
     },
+    table: {
+      minWidth: "700px !important",
+      minHeight: 300,
+      maxHeight: 700,
+      overflow: "auto",
+    },
   }));
   const classes = useStyles();
   if (!myCart?.length) {
@@ -113,72 +126,80 @@ function MyCart() {
   }
   return (
     <Grid container className={classes.root}>
-      <Grid item sm={8} className={classes.cartsContainer}>
+      <Grid item xs={12} md={8} sm={12} className={classes.cartsContainer}>
         <Typography variant={"h4"} style={{ textAlign: "left" }}>
           Shopping Cart
         </Typography>
-        <Grid container className={classes.titles}>
-          <Grid item xs={6} sm={5}>
-            <Typography variant="h6">Product description</Typography>
-          </Grid>
-          <Grid item xs={6} sm={2}>
-            <Typography variant="h6">Price</Typography>
-          </Grid>
-          <Grid item xs={6} sm={2}>
-            <Typography variant="h6">Quantity</Typography>
-          </Grid>
-          <Grid item xs={6} sm={2}>
-            <Typography variant="h6">Total Price</Typography>
-          </Grid>
-        </Grid>
-        <hr />
-        {myCart?.map((e, i) => {
-          return <CartItem key={i} cart={e} calculateTotal={calculateTotal} />;
-        })}
-        <Grid item xs={12}>
-          <Grid container justifyContent="flex-end" alignItems="flex-end">
-            <Grid item xs={5} sm={4} className={classes.bottomTitles}>
-              <Typography variant="h5" className={classes.bottomTitle}>
-                Sub Total
-              </Typography>
-              <Typography variant="h5" className={classes.bottomTitle}>
-                Shipping
-              </Typography>
-              <Typography variant="h4" className={classes.bottomTitle}>
-                Total
-              </Typography>
-            </Grid>
+        <TableContainer style={{ minWidth: 300 }}>
+          <Table aria-label="spanning table">
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.text}>
+                  <Typography variant="h6">Image</Typography>
+                </TableCell>
+                <TableCell className={classes.text}>
+                  <Typography variant="h6">Name</Typography>
+                </TableCell>
+                <TableCell className={classes.text}>
+                  <Typography variant="h6">Price</Typography>
+                </TableCell>
+                <TableCell className={classes.text}>
+                  <Typography variant="h6">Quantity</Typography>
+                </TableCell>
+                <TableCell className={classes.text}>
+                  <Typography variant="h6">Total</Typography>
+                </TableCell>
+                <TableCell className={classes.text}>
+                  <Typography variant="h6">Remove</Typography>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody className={classes.table}>
+              {myCart?.map((e, i) => {
+                return (
+                  <CartItem key={i} cart={e} calculateTotal={calculateTotal} />
+                );
+              })}
+            </TableBody>
 
-            <Grid
-              item
-              xs={5}
-              sm={3}
-              className={classes.bottomTitles}
-              style={{ color: "#000" }}
-            >
-              <Typography variant="h5" className={classes.bottomTitle}>
+            <TableRow>
+              <TableCell colSpan={4} style={{ border: "none" }} />
+              <TableCell className={classes.text}>Subtotal</TableCell>
+              <TableCell align="right" className={classes.text}>
+                {" "}
                 Rs. {subTotal}
-              </Typography>
-              <Typography variant="h5" className={classes.bottomTitle}>
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell colSpan={4} style={{ border: "none" }} />
+              <TableCell className={classes.text}>Shipping</TableCell>
+              <TableCell align="right" className={classes.text}>
+                {" "}
                 Rs. {shipping}
-              </Typography>
-              <Typography
-                variant="h4"
-                color="primary"
-                className={classes.bottomTitle}
-              >
-                Rs. {Total}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} style={{ textAlign: "left" }}>
-            <Button color="primary">
-              <KeyboardBackspaceIcon /> Continue Shopping
-            </Button>
-          </Grid>
+              </TableCell>
+              {/* <TableCell align="right">879879</TableCell> */}
+            </TableRow>
+
+            <TableRow>
+              <TableCell colSpan={4} style={{ border: "none" }} />
+              <TableCell className={classes.text}>Total</TableCell>
+              <TableCell align="right" className={classes.text}>
+                <Typography variant="h5" color="primary">
+                  Rs. {Total}
+                </Typography>
+              </TableCell>
+            </TableRow>
+          </Table>
+        </TableContainer>
+
+        <Grid item xs={12} style={{ textAlign: "left" }}>
+          <Button color="primary">
+            <KeyboardBackspaceIcon /> Continue Shopping
+          </Button>
         </Grid>
       </Grid>
-      <Grid sm={4} className={classes.sideCard}>
+      <Grid xs={12} sm={12} md={4} className={classes.sideCard}>
         <Grid container justifyContent="center" alignItems="center">
           <Grid item xs={12} sm={11} className={classes.paymentCard}>
             <Typography variant="h4">Payment Details</Typography>

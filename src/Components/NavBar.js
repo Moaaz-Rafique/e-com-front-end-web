@@ -1,11 +1,11 @@
-import { Icon, Grid, makeStyles, Typography } from "@material-ui/core";
+import { Avatar, Grid, makeStyles, Typography } from "@material-ui/core";
 import { Link, useHistory } from "react-router-dom";
 import { useTheme } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 
 import ShoppingCartOutlinedIcon from "@material-ui/icons/ShoppingCartOutlined";
 import PersonOutlineOutlinedIcon from "@material-ui/icons/PersonOutlineOutlined";
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { LOGOUT_USER } from "../store/types";
@@ -13,6 +13,18 @@ function NavBar() {
   // const currentRoute = useSelector((state) => state?.linkReducer?.currentRoute);
   const user = useSelector((state) => state?.userReducer?.user_details);
   const theme = useTheme();
+  const [userMenu, setUserMenu] = useState([]);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [size, setSize] = useState([0, 0]);
+
+  useLayoutEffect(() => {
+    function updateSize() {
+      setSize([window.innerWidth, window.innerHeight]);
+    }
+    window.addEventListener("resize", updateSize);
+    updateSize();
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
   const useStyles = makeStyles((theme) => ({
     root: {
       padding: 10,
@@ -31,17 +43,43 @@ function NavBar() {
     },
     icon: {
       //   padding: "14px",
+      height: 25,
+      width: 25,
       color: theme.palette.text.primary,
+      background: "none",
+    },
+    avatarIcon: {
+      backgroundColor: "#f0f0f0",
     },
     icons: {
       padding: 10,
       minWidth: "100px",
     },
-    // paper: {
-    //   padding: 100,
-    //   color: theme.palette.text.secondary,
-    //   padding: theme.spacing(2),
-    // },
+    userMenu: {
+      display: "flex",
+      flexDirection: "column",
+      width: 100,
+      // maxHeight: 200,
+      position: "fixed",
+      zIndex: 2,
+      left: size[0] - 200,
+      top: 40,
+      border: "1px solid" + theme.palette.text.primary,
+      borderRadius: "10px",
+      backgroundColor: theme.palette.secondary.main || "#f0f0f0",
+      opacity: 0.8,
+      padding: 20,
+      margin: 10,
+      alignItems: "center",
+    },
+    menuLink: {
+      padding: "5px 10px",
+      margin: 3,
+      width: "90%",
+      background: "#efefef",
+
+      color: theme.palette.text.primary,
+    },
   }));
   const classes = useStyles();
   const navLinks = [
@@ -64,16 +102,7 @@ function NavBar() {
   ];
   const history = useHistory();
   const dispatch = useDispatch();
-  const [size, setSize] = useState([0, 0]);
 
-  useLayoutEffect(() => {
-    function updateSize() {
-      setSize([window.innerWidth, window.innerHeight]);
-    }
-    window.addEventListener("resize", updateSize);
-    updateSize();
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
   const logoutUser = async (e) => {
     if (user) {
       await dispatch({ type: LOGOUT_USER });
@@ -82,6 +111,47 @@ function NavBar() {
       history.push("/signup");
     }
   };
+  const loggedInLinks = [
+    {
+      icon: user?.imageUrl || "",
+    },
+    {
+      title: "My cart",
+      onClick: () => {
+        // alert("aaa");
+        history.push("/myCart");
+      },
+    },
+  ];
+  const adminLinks = [
+    {
+      title: "Admin Panel",
+      onClick: () => {
+        history.push("/admin");
+      },
+    },
+    {
+      title: "Add Products",
+      onClick: () => {
+        history.push("/admin/product");
+      },
+    },
+    {
+      title: "Add Categories",
+      onClick: () => {
+        history.push("/admin/addCategory");
+      },
+    },
+  ];
+  useEffect(() => {
+    const links = [];
+    if (user) {
+      links.push(...loggedInLinks);
+      if (user.status == "admin") links.push(...adminLinks);
+    }
+    links.push({ title: user ? "Logout" : "Login", onClick: logoutUser });
+    setUserMenu(links);
+  }, [user]);
   return (
     <Grid item xs={12} className={classes.root}>
       <Grid container direction="row" justifyContent="space-between">
@@ -94,25 +164,6 @@ function NavBar() {
             <span style={{ color: theme.palette.primary.main }}>E</span>-shop
           </Typography>
         </Grid>
-        {/* {size[0] > 1000 ? (
-          <Grid item md={4} lg={4} className={classes.links}>
-            {navLinks.map((e, i) => {
-              return (
-                <Link key={i} to={e.route} className={classes.link}>
-                  {e.name}
-                </Link>
-              );
-            })}
-          </Grid>
-        ) : (
-          ""
-        )} */}
-
-        {user?.status == "admin" ? (
-          <Grid item>
-            <Link to="/admin">Admin Page</Link>
-          </Grid>
-        ) : null}
         <Grid item xs={5} md={4} lg={2} className={classes.icons}>
           <Grid container justifyContent="space-around">
             {navButtons.map((e, i) => {
@@ -126,7 +177,39 @@ function NavBar() {
             })}
 
             <Grid item>
-              <PersonOutlineOutlinedIcon onClick={logoutUser} />
+              <Avatar
+                // alt={user?.username}
+                // className={classes.text}
+                className={classes.icon}
+                src={user?.imageUrl || PersonOutlineOutlinedIcon}
+                onClick={() => setShowUserMenu(!showUserMenu)}
+              />
+              {showUserMenu ? (
+                <div
+                  onMouseLeave={() => setShowUserMenu(false)}
+                  onMouseEnter={() => setShowUserMenu(true)}
+                  className={classes.userMenu}
+                >
+                  {userMenu.map((e, i) => {
+                    return e?.icon ? (
+                      <Avatar
+                        className={classes.avatarIcon}
+                        style={{ width: 50, height: 50 }}
+                        src={user.imageUrl}
+                        // onClick={e?.onClick}
+                      />
+                    ) : (
+                      <div
+                        key={i}
+                        onClick={e?.onClick}
+                        className={classes.menuLink}
+                      >
+                        {e.title}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : null}
             </Grid>
           </Grid>
         </Grid>

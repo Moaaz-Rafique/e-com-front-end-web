@@ -6,6 +6,8 @@ import {
   makeStyles,
   InputBase,
   Button,
+  TableRow,
+  TableCell,
 } from "@material-ui/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -58,6 +60,7 @@ function CartItem({ cart, calculateTotal }) {
       justifyContent: "center",
     },
     inputBase: {
+      backgroundColor: "red",
       border: "none",
       textAlign: "center !important",
       "&:focus-visible": {
@@ -70,8 +73,9 @@ function CartItem({ cart, calculateTotal }) {
 
     image: {
       width: "90%",
-      height: 100,
+      height: 50,
       objectFit: "contain",
+      background: "#f0f0f0",
     },
     imageContainer: {
       minWidth: "fit-content",
@@ -79,12 +83,18 @@ function CartItem({ cart, calculateTotal }) {
       justifyContent: "center",
       alignItems: "center",
       padding: 10,
-      background: "#f0f0f0",
     },
     cartParts: {
       //   borderLeft: "1px solid #f3f3f3",
       justifyContent: "center",
       padding: 10,
+    },
+    row: {
+      border: "none",
+    },
+    text: {
+      border: ".1px solid #eee",
+      textAlign: "center",
     },
   }));
   const classes = useStyles();
@@ -96,48 +106,38 @@ function CartItem({ cart, calculateTotal }) {
     setCartCount(Math.floor(newCount));
   };
   return (
-    <Grid container alignItems="center" className={classes.root}>
-      <Grid item xs={3} sm={2}>
+    <TableRow className={classes.row}>
+      <TableCell className={classes.text}>
         <div className={classes.imageContainer}>
           <img
             src={`${BASE_URL}/images/${product?._id}/${product?.image}`}
             className={classes.image}
           />
         </div>
-      </Grid>
-      <Grid item xs={3} className={classes.cartParts}>
-        <Typography variant="h6">{product?.title}</Typography>
-      </Grid>
-      <Grid item xs={6} sm={2} className={classes.cartParts}>
-        <Typography variant="h6">Rs. {product?.price}</Typography>
-      </Grid>
-      <Grid item xs={6} sm={2} className={classes.cartParts}>
+      </TableCell>
+      <TableCell align="right" className={classes.text}>
+        {product?.title}
+      </TableCell>
+      <TableCell align="right" className={classes.text}>
+        Rs. {product?.price}
+      </TableCell>
+      <TableCell align="right" className={classes.text}>
         <InputBase
           type="number"
+          className="f1"
           value={cartCount}
           onChange={updateCount}
-          variant="filled"
-          className={classes.inputBase}
-          InputProps={{
-            style: {
-              borderRadius: 100,
-            },
-            classes: { root: classes.inputBase },
-          }}
         />
-        {/* <TextField
-        /> */}
-      </Grid>
-      <Grid item xs={4} sm={2} className={classes.cartParts}>
-        <Typography variant="h6">Rs. {cartCount * product?.price}</Typography>
-      </Grid>
-      <Grid item xs={1}>
+      </TableCell>
+      <TableCell align="right" className={classes.text}>
+        Rs. {cartCount * product?.price}
+      </TableCell>
+      <TableCell align="right" className={classes.text}>
         <Button style={{ width: "100%" }}>
           <CloseIcon onClick={removeCart} />
         </Button>
-      </Grid>
-      {/* <Grid item xs={12} sm={12}></Grid> */}
-    </Grid>
+      </TableCell>
+    </TableRow>
   );
 }
 export default CartItem;

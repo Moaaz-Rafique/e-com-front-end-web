@@ -8,6 +8,7 @@ import CartItem from "./CartItem";
 import LoginPage from "./Login";
 import AdminPanel from "./AdminPanel";
 import CategoryCard from "./CategoryCard";
+import UserCard from "./UserCard";
 export {
   DropZoneForImages,
   ProductCard,
@@ -19,4 +20,5 @@ export {
   LoginPage,
   AdminPanel,
   CategoryCard,
+  UserCard,
 };

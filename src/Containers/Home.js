@@ -7,8 +7,8 @@ import { useEffect } from "react";
 function Home() {
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log("weser");
-    dispatch({ type: SET_CURRENT_ROUTE, payload: "aasd" });
+    // console.log("weser");
+    // dispatch({ type: SET_CURRENT_ROUTE, payload: "aasd" });
   }, []);
   return (
     <Grid

@@ -1,9 +1,10 @@
-import { Avatar, Button, Grid, Icon, Typography } from "@material-ui/core";
+import { Button, Grid, makeStyles } from "@material-ui/core";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FETCH_ALL_USER } from "../../Constants/apis";
 import { SET_USERS } from "../../store/types";
+import { UserCard } from "../../Components";
 
 function UsersList() {
   const users = useSelector((state) => state?.userReducer?.users);
@@ -16,37 +17,40 @@ function UsersList() {
     dispatch({ type: SET_USERS, payload: data.data.data });
     // console.log(users);
   };
+  const [size, setSize] = useState([0, 0]);
+
+  useLayoutEffect(() => {
+    function updateSize() {
+      setSize([window.innerWidth, window.innerHeight]);
+    }
+    window.addEventListener("resize", updateSize);
+    updateSize();
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      padding: 10,
+      margin: "10px 0px",
+    },
+    avatarIcon: {
+      backgroundColor: "#f0f0f0",
+    },
+    text: {
+      // height: "100px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      // color: theme.palette.primary.main,
+    },
+  }));
+  const classes = useStyles();
   return (
-    <Grid container>
+    <Grid container justifyContent="center" alignItem="center">
       <Grid item xs={12}>
         {users?.map((user, i) => {
-          return (
-            <Grid container key={i} justifyContent="center" alignItem="center">
-              <Grid item xs={1}>
-                <Avatar
-                  alt={user?.username}
-                  src={
-                    user.imageUrl ||
-                    "https://cdn4.iconfinder.com/data/icons/e-commerce-181/512/477_profile__avatar__man_-512.png"
-                  }
-                />
-              </Grid>
-              <Grid item xs={3} align="center">
-                <Typography>{user.username}</Typography>
-              </Grid>
-              <Grid item xs={4} align="center">
-                <Typography>{user?.email || "email does not exist"}</Typography>
-              </Grid>
-              <Grid item xs={2} align="center">
-                <Typography>{user?.status || "normal"}</Typography>
-              </Grid>
-              <Grid item xs={2} align="center">
-                <Typography>{user?.loginType}</Typography>
-              </Grid>
-            </Grid>
-          );
+          return <UserCard key={i} user={user} classes={classes} size={size} />;
         })}
-        <Button onClick={() => console.log("users", users)}>Users</Button>
+        {/* <Button onClick={() => console.log("users", users)}>Users</Button> */}
       </Grid>
     </Grid>
   );
