@@ -42,6 +42,7 @@ function Signup() {
       if (data?.data?.success) {
         if (data?.data?.newUser) {
           dispatch({ type: SET_USER_DETAILS, payload: data.data.data });
+
           swal("Congratulations", "User Signup was successful", "success");
           history.push("/");
         } else {
@@ -58,13 +59,21 @@ function Signup() {
           history.push("/");
         }
       } else {
-        // console.log(data);
+        swal(
+          "Error in Sign up",
+          data?.data?.message || "unknown Error",
+
+          "error"
+        );
       }
     } catch (error) {
-      // console.log(err);
+      // console.log(error);
       swal(
-        "Error updating category",
-        error?.response?.data?.message || "unknown Error",
+        "Error in Sign up",
+        error?.response?.data?.message ||
+          error?.data?.message ||
+          error?.message ||
+          "unknown Error",
         "error"
       );
       // swal(err?.message)
@@ -83,7 +92,7 @@ function Signup() {
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (!re.test(email)) {
-      swal("", "Please enter a valid", "error");
+      swal("", "Please enter a valid email", "error");
 
       return;
     }
@@ -93,24 +102,27 @@ function Signup() {
       email,
       loginType: "email",
       passwordHash,
+      status: "normal",
     };
     signupUser(newUser);
     // console.log(newUser);
   };
 
   const sigupWithFacebook = (user) => {
-    // console.log(user);
+    console.log("fb return-->", user);
     const newUser = {
       username: user.name,
       id: user.id,
       email: user.email,
       loginType: "facebook",
       imageUrl: user.picture.data.url,
+      status: "normal",
     };
     signupUser(newUser);
     // console.log(newUser);
   };
   const sigupWithGoogle = (e) => {
+    console.log("google return--->", e);
     const user = e.profileObj;
     const newUser = {
       username: user.name,
@@ -118,6 +130,7 @@ function Signup() {
       email: user.email,
       loginType: "google",
       imageUrl: user.imageUrl,
+      status: "normal",
     };
     signupUser(newUser);
   };

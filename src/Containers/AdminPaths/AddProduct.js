@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CloseIcon from "@material-ui/icons/Close";
 import { SET_CATEGORIES, SET_PRODUCT_DETAILS } from "../../store/types";
 import qs from "qs";
+import swal from "sweetalert";
 
 function AddProduct() {
   const useStyles = makeStyles((theme) => ({
@@ -105,7 +106,7 @@ function AddProduct() {
       dispatch({ type: SET_PRODUCT_DETAILS, payload: data.data.data });
       // dispatch({ type: SET_SIMILAR_PRODUCTS, payload: data.data.similar });
     } catch (error) {
-      console.log(error);
+      swal("", error.message, "error");
     }
   };
   const removeCategory = (id) => {
@@ -116,7 +117,7 @@ function AddProduct() {
     }
     setProductCategories(newCategories);
   };
-  const addProduct = () => {
+  const addProduct = async () => {
     const myProduct = new FormData();
     if (!selectedImage) {
       setMyAlert(true);
@@ -130,10 +131,18 @@ function AddProduct() {
       myProduct.append("categories", category);
     }
     try {
-      axios.post(ADD_PRODUCT, myProduct);
+      const data = await axios.post(ADD_PRODUCT, myProduct);
       // .then((response) => console.log(response.data.data));
+      if (data?.data?.data?._id) {
+        swal("Product Updated Successfully", "", "success");
+        history.push("/product/" + data?.data?.data?._id);
+      } else {
+        swal("Why");
+        console.log(data.data);
+      }
+      // swal("Product Added successfully", "", "success");
     } catch (err) {
-      console.log(err);
+      swal("", err.message, "error");
     }
   };
   const updateProduct = async () => {
@@ -148,11 +157,16 @@ function AddProduct() {
       myProduct.append("categories", category);
     }
     try {
-      console.log(productCategories);
+      // console.log(productCategories);
       const data = await axios.post(UPDATE_PRODUCT, myProduct);
-      dispatch({ type: SET_PRODUCT_DETAILS, payload: data.data.data });
+      dispatch({ type: SET_PRODUCT_DETAILS, payload: data?.data?.data });
+      if (data?.data?.data?._id)
+        swal("Product Updated Successfully", "", "success");
+      // else {
+      //   swal('Why')
+      // }
     } catch (err) {
-      console.log(err);
+      swal("", err.message, "error");
     }
   };
   const getAllCategories = async () => {
@@ -161,7 +175,7 @@ function AddProduct() {
       // .then((response) => setAllCategories(response.data.data));
       dispatch({ type: SET_CATEGORIES, payload: data.data.data });
     } catch (err) {
-      console.log(err);
+      swal("", err.message, "error");
     }
   };
   const addProductCategory = () => {

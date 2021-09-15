@@ -1,7 +1,7 @@
 import { REMOVE_CART, ADD_CART, SET_CARTS, SET_CART_COUNT } from "../types";
 
 const INITIAL_STATE = {
-  carts: [{}],
+  carts: [],
 };
 
 const reducer = (state = INITIAL_STATE, action) => {

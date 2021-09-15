@@ -195,7 +195,7 @@ function NavBar() {
                       <Avatar
                         className={classes.avatarIcon}
                         style={{ width: 50, height: 50 }}
-                        src={user.imageUrl}
+                        src={user?.imageUrl}
                         // onClick={e?.onClick}
                       />
                     ) : (

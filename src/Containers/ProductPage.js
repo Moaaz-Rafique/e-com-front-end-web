@@ -94,11 +94,11 @@ function ProductPage() {
     let query = {
       id,
     };
-    console.log(id);
+    // console.log(id);
     try {
       const data = await axios.get(FETCH_PRODUCT + qs.stringify(query));
 
-      console.log(data.data);
+      // console.log(data.data);
       dispatch({ type: SET_PRODUCT_DETAILS, payload: data.data.data });
       dispatch({ type: SET_SIMILAR_PRODUCTS, payload: data.data.similar });
       // setProduct(data.data.data);
@@ -119,7 +119,7 @@ function ProductPage() {
       }
     }
   };
-  const addProductToCart = () => {
+  const addProductToCart = async () => {
     if (!user?._id) {
       // alert("Please login to add to cart");
       swal({
@@ -136,21 +136,23 @@ function ProductPage() {
       return;
     }
     try {
-      axios
-        .post(ADD_CART, { product: product?._id, user: user?._id })
-        .then((response) => console.log(response.data.data));
+      const data = await axios.post(ADD_CART, {
+        product: product?._id,
+        user: user?._id,
+      });
+      // .then((response) => console.log(response.data.data));
       // console.log(user)
       // axios
       //   .post(ADD_PRODUCT, myProduct)
     } catch (err) {
-      console.log(err);
+      swal("", err.message, "error");
     }
   };
   const handleUpdateProduct = () => {
     history.push("/admin/product/" + id);
   };
   const handleRemoveProduct = async () => {
-    console.log("what");
+    // console.log("what");
 
     swal({
       title: "This action is irreversible",
