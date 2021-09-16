@@ -214,10 +214,7 @@ function ProductPage() {
       <Grid item sm={6} xs={11}>
         <div className={classes.imageDiv}>
           {product.image ? (
-            <img
-              src={`${BASE_URL}/images/${product?._id}/${product?.image}`}
-              className={classes.image}
-            />
+            <img src={product?.image} className={classes.image} />
           ) : (
             "loading image"
           )}

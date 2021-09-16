@@ -44,10 +44,7 @@ function ProductCard(props) {
             history.push("/product/" + product._id);
           }}
         >
-          <img
-            src={`${BASE_URL}/images/${product?._id}/${product?.image}`}
-            className={classes.image}
-          />
+          <img src={product?.image} className={classes.image} />
         </div>
         <Typography variant="subtitle1" className={classes.text}>
           <Box fontWeight="fontWeightLight">{product?.title}</Box>

@@ -134,7 +134,7 @@ function AddProduct() {
       const data = await axios.post(ADD_PRODUCT, myProduct);
       // .then((response) => console.log(response.data.data));
       if (data?.data?.data?._id) {
-        swal("Product Updated Successfully", "", "success");
+        swal("Product Added Successfully", "", "success");
         history.push("/product/" + data?.data?.data?._id);
       } else {
         swal("Why");
