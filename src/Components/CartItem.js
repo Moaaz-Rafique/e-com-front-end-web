@@ -110,7 +110,7 @@ function CartItem({ cart, calculateTotal }) {
       <TableCell className={classes.text}>
         <div className={classes.imageContainer}>
           <img
-            src={`${BASE_URL}/images/${product?._id}/${product?.image}`}
+            src={product?.image}
             className={classes.image}
           />
         </div>

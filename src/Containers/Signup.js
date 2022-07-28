@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { RemoveRedEye } from "@material-ui/icons";
+import { RemoveRedEye, TramRounded } from "@material-ui/icons";
 
 import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
@@ -32,7 +32,7 @@ function Signup() {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [passwordMask, setPasswordMask] = useState(true);
 
-  const [loginVariable, setLoginVariable] = useState(false);
+  const [loginVariable, setLoginVariable] = useState(TramRounded);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -222,7 +222,7 @@ function Signup() {
         <Grid item xs={6} className={classes.sideImageContainer}>
           <img
             className={classes.sideImage}
-            src="https://thumbs.dreamstime.com/z/online-store-vertical-banner-copy-space-vertical-banner-copy-space-people-characters-shopping-buying-goods-143197645.jpg"
+            src="https://static.vecteezy.com/system/resources/previews/000/210/682/original/vector-red-watercolour-background.jpg"
           />
         </Grid>
         {/*  Sign up form*/}

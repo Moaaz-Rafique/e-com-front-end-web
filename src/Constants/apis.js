@@ -1,5 +1,5 @@
 const api = "/api";
-const IS_DEV = true;
+const IS_DEV = false;
 export const BASE_URL = IS_DEV
   ? `http://localhost:3001`
   : "https://thawing-fjord-25254.herokuapp.com";
