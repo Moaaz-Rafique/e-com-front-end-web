@@ -1,6 +1,4 @@
-# Getting Started with Create React App
-
-Live at https://ecom-with-server.web.app/
+# Live at https://ecom-with-server.web.app/
 
 
 
